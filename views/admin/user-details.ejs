@@ -1,0 +1,158 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+
+        <!-- user -->
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header" style="background-color: #6fd943">
+              <h4>Personal Information</h4>
+            </div>
+            <div class="personal-information row m-2 pt-2">
+              <div class="col-md-9 d-flex justify-content-between">
+                <h6><b>Name:</b></h6>
+                <span style="color: #2e2d2d;"><%= userDetails.name %></span>
+                <h6><b>Mobile Number:</b></h6>
+                <span style="color: #2e2d2d;"><%= userDetails.contactNumber %></span>
+              </div>
+              <div class="col-md-6 d-flex justify-content-between"></div>
+            </div>
+
+            <div class="personal-information row m-2 pt-2 pb-2" style="border-top: 1px solid #cdc3c3">
+              <div class="col-md-9 d-flex justify-content-between">
+                <h6><b>State of Residence:</b></h6>
+                <span style="color: #2e2d2d;"><%= userDetails.stateOfResidence %></span>
+                <h6><b>Date of Birth:</b></h6>
+                <span style="color: #2e2d2d;"><%= userDetails.dateOfBirth %></span>
+              </div>
+              <div class="col-md-6 d-flex justify-content-between"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add Fund Request List -->
+  <section class="section">
+    <div class="section-body">
+      <!--  Add Fund Request List start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="background-color: #6fd943">
+              <div class="col-12 row card-header-box">
+                <div class="col-md-6">
+                  <h4 class="float-left">Payment Information</h4>
+                  <br />
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <!--  -->
+
+              <!--  -->
+
+              <div class="row m-2">
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table id="example1" class="table">
+                      <thead>
+                        <tr>
+                          <td>S.NO</td>
+                          <td>Amount</td>
+                          <td>transaction Id</td>
+                          <td>Date</td>
+                          <td>Status</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(!userDetails.payments[0]) { %>
+                        <tr>
+                          <td colspan="100%" class="text-danger text-center">No Data</td>
+                        </tr>
+                        <% } else {%> <% userDetails.payments.forEach(function(payment,index){ %>
+                        <td><%= index+1 %></td>
+                        <td><%= payment.amount %></td>
+                        <td><%= payment.order_id %></td>
+                        <td><%= payment.created_at %></td>
+                        <td><%= payment.status %></td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Select Game list ends-->
+    </div>
+  </section>
+
+  <!-- withdraw Fund Request List -->
+  <section class="section">
+    <div class="section-body">
+      <!--  Withdraw Fund Request List start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="background-color: #6fd943">
+              <div class="col-12 row card-header-box">
+                <div class="col-md-6">
+                  <h4 class="float-left">Schedule Information</h4>
+                  <br />
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <!--  -->
+
+              <!--  -->
+
+              <div class="row m-2">
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table id="example2" class="table">
+                      <thead >
+                        <tr>
+                          <td>S.NO</td>
+                          <td>Trainer Name</td>
+                          <td>Date</td>
+                          <td>Time</td>
+                          <td>Status</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(!userDetails.schedules[0]) { %>
+                        <tr>
+                          <td colspan="100%" class="text-danger text-center">No Data</td>
+                        </tr>
+                        <% } else {%> <% userDetails.schedules.forEach(function(schedule,index){ %>
+                        <td><%= index+1 %></td>
+                        <td><%= schedule.trainer.name %></td>
+                        <td><%= schedule.date %></td>
+                        <td><%= schedule.time %></td>
+                        <td><%= schedule.status %></td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Select Game list ends-->
+    </div>
+  </section>
+</div>
+
+<%- include ('partials/footer.ejs') %>

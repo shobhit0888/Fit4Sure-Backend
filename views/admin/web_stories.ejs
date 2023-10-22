@@ -1,0 +1,269 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Website Stories</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Add Story"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add Story"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead>
+                        <tr class="text-center">
+                          <th>Name</th>
+                          <th>Age</th>
+                          <th>Occupation</th>
+                          <th>Weight Loss</th>
+                          <th>Description</th>
+                          <th>Image</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% if(!stories[0]) { %>
+                        <tr>
+                          <td colspan="100%">No Data</td>
+                        </tr>
+                        <% } else {%> <% stories.forEach(function(story){ %>
+                        <tr class="text-center">
+                          <td><%= story.name %></td>
+                            <td><%= story.age %></td>
+                            <td><%= story.occupation %></td>
+                            <td><%= story.weight_loss %></td>
+                            <td><%= story.description %></td>
+                            <td>
+                                <img
+                                src="<%= story.image %>"
+                                alt="image"
+                                width="100px"
+                                height="100px"
+                                />
+                            </td>
+                          <td>
+                            <i
+                              class="btn btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deletefeature('<%= story._id %>');"
+                            ></i>
+                          </td>
+                        </tr>
+
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Website Story</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form
+              id="addform"
+              class="form-group font-weight-bold showcursor: true"
+            >
+              <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                <label for="name" class="form-label">Name</label>
+                <input
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  placeholder="Name"
+                />
+              </div>
+                <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                    <label for="age" class="form-label">Age</label>
+                    <input
+                    id="age"
+                    name="age"
+                    class="form-control"
+                    placeholder="Age"
+                    />
+                </div>
+                <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                    <label for="occupation" class="form-label">Occupation</label>
+                    <input
+                    id="occupation"
+                    name="occupation"
+                    class="form-control"
+                    placeholder="Occupation"
+                    />
+                </div>
+                <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                    <label for="weight_loss" class="form-label">Weight Loss</label>
+                    <input
+                    id="weight_loss"
+                    name="weight_loss"
+                    class="form-control"
+                    placeholder="Weight Loss"
+                    />
+                </div>
+              <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                <label for="description" class="form-label">Decription</label>
+                <input
+                  id="description"
+                  name="description"
+                  class="form-control"
+                  placeholder="Decription"
+                />
+              </div>
+                <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                    <label for="image" class="form-label">Image</label>
+                    <input
+                    id="image"
+                    name="image"
+                    class=form-control"
+                    placeholder="Image"
+                    type="file"
+                    accept="image/*"
+                    />
+
+              <button
+                type="submit"
+                class="btn mt-3 pull-right"
+                style="background-color: #6fd943; color: #fff"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+</div>
+
+<%- include ('partials/footer.ejs') %>
+
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  const form = $("#addform");
+
+  form.on("submit", submitHandler);
+
+  function submitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    let formData = new FormData();
+    formData.append("name", $("#name").val());
+    formData.append("age", $("#age").val());
+    formData.append("occupation", $("#occupation").val());
+    formData.append("weight_loss", $("#weight_loss").val());
+  formData.append("description", $("#description").val());
+  formData.append("image", $("#image")[0].files[0]);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: false,
+      processData: false,
+      url: "/admin/web_stories/add",
+      data: formData,
+    })
+
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+<script>
+  function deletefeature(id) {
+    if (confirm("Do you really want to delete this record")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/web_stories/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>

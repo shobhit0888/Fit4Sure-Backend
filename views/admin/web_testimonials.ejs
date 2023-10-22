@@ -1,0 +1,198 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Testimonials</h4>
+                <div class="head-right-btn">
+                  <!-- <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add web_testimonials"
+                    >
+                      Add
+                    </a>
+                  </button> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="body mb-5">
+              <div class="modal-body  mb-5">
+                <form
+                  id="addnewslider"
+                  class="mx-5 form-group font-weight-bold showcursor: true"
+                >
+                <div class="mb-3">
+                    <label for="logo" class="form-label">Image</label>
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="image"
+                      name="image"
+                    />
+                  </div>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="title"
+                        name="title"
+                        placeholder="Enter Food Title"
+                        value="<%= title %>"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="sub_title" class="form-label">Sub Title</label>
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="sub_title"
+                        name="sub_title"
+                        placeholder="Enter Food Sub Title"
+                        value="<%= sub_title %>"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">
+                          <%= description %> 
+                        </textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="link" class="form-label">Link</label>
+                        <input
+                        type="text"
+                        class="form-control"
+                        id="link"
+                        name="link"
+                        placeholder="Enter Food Link"
+                        value="<%= link %>"
+                        />
+                    </div>
+    
+                  
+                  <button
+                    type="submit"
+                    class="btn mt-3 mb-3 pull-right"
+                    style="background-color: #6fd943; color: #fff"
+                  >
+                    Add
+                  </button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+  $(document).ready(function () {
+    $("#example").DataTable();
+  });
+
+  var addForm = $("#addnewslider");
+
+  addForm.on("submit", addsubmitHandler);
+
+  function addsubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = new FormData(addForm[0]);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      enctype: "multipart/form-data",
+      processData: false,
+      contentType: false,
+      url: "/admin/web_testimonials/add",
+      data: formData,
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+
+  function deleteweb_testimonials(id) {
+    if (confirm("Do you really want to delete this slider")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/web_testimonials/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>

@@ -1,0 +1,411 @@
+<%- include('partials/header.ejs') %>
+<!-- Main Sidebar End -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <!--  List Faq Start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="background-color: #6fd943">
+              <div class="col-12">
+                <h4 class="float-left">Coupon</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add Coupon"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead class="t-head">
+                        <tr>
+                          <th>Image</th>
+                          <th>Name</th>
+                          <th>Code</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% if(!coupon[0]){ %>
+                        <tr>
+                          <td colspan="12">No coupon Found</td>
+                        </tr>
+                        <% } else {for(var i=0; i < coupon.length; i++) { %>
+                        <tr>
+                          <td>
+                            <img
+                              src="/uploads/coupon/<%- coupon[i].image %>"
+                              alt="<%- coupon[i].image %>"
+                              width="70"
+                              height="50"
+                              data-toggle="title"
+                              class="rounded"
+                            />
+                          </td>
+                          <td><%- coupon[i].coupon_name %></td>
+                          <td><%- coupon[i].coupon_code %></td>
+                          <td><%- coupon[i].valid_start_date %></td>
+                          <td><%- coupon[i].valid_expiry_date %></td>
+                          <td><%- coupon[i].status %></td>
+                          <td>
+                            <i
+                              class="btn btn-info btn-lg fa fa-edit"
+                              id="edit_btn"
+                              data-toggle="modal"
+                              data-model="<%= JSON.stringify(coupon[i]) %>"
+                            ></i>
+                            <i
+                              class="btn btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deleteCoupon('<%- coupon[i].id %>')"
+                            >
+                            </i>
+                          </td>
+                        </tr>
+                        <% } } %>
+                        <tr></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- List Faq Ends -->
+    </div>
+  </section>
+</div>
+<!-- Main Content -->
+
+<!-- Modal Popup Start-->
+<div class="modal" id="myModal" style="margin-top: 50px">
+  <!-- modal  -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Coupon</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="body">
+        <div class="modal-body">
+          <form id="addform" class="font-weight-bold showcursor: true">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Image</label>
+                  <input
+                    type="file"
+                    class="form-control"
+                    id="image"
+                    name="image"
+                  />
+                </div>
+                <div class="form-group">
+                  <div class="row"></div>
+                  <label class="col-form-label">Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="coupon_name"
+                    name="coupon_name"
+                    placeholder=" Coupon Name"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Code</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="coupon_code"
+                    name="coupon_code"
+                    placeholder="Coupon Code"
+                  />
+                </div>
+                <div class="form-group">
+                  <label class="col-form-label">Status</label>
+                  <select name="status" class="form-control">
+                    <option value="">Select</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Start Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="valid_start_date"
+                    name="valid_start_date"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">End Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="valid_expiry_date"
+                    name="valid_expiry_date"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn mt-3 mb-3 pull-right"
+              style="background-color: #6fd943; color: #fff"
+            >
+              Add
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal  -->
+
+<!-- edit modal -->
+<div class="modal" id="edit" style="margin-top: 50px">
+  <!-- modal  -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Coupon</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="body">
+        <div class="modal-body">
+          <form id="editform" class="font-weight-bold showcursor: true">
+            <input type="hidden" id="editid" name="editid" />
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editcoupon_name"
+                    name="editcoupon_name"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Code</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="editcoupon_code"
+                    name="editcoupon_code"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group">
+                <label class="col-form-label">Status</label>
+                <select name="editstatus" id="editstatus" class="form-control">
+                  <option value="">Select</option>
+                  <option value="Active">Active</option>
+                  <option value="Inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">Start Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editvalid_start_date"
+                    name="editvalid_start_date"
+                  />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="col-form-label">End Date</label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="editvalid_expiry_date"
+                    name="editvalid_expiry_date"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn mt-3 mb-3 pull-right"
+              style="background-color: #6fd943; color: #fff"
+            >
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal end -->
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+  var addform = $("#addform");
+  addform.on("submit", addslidersubmitHandler);
+
+  function addslidersubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = new FormData(addform[0]);
+    console.log(formData);
+    // // DO POST
+    $.ajax({
+      type: "POST",
+      enctype: "multipart/form-data",
+      cache: false,
+      processData: false,
+      contentType: false,
+      url: "/admin/coupon/add",
+      data: formData,
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+
+<script>
+  $(document).on("click", "#edit_btn", function (e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#edit").modal("show");
+    var data = finalData;
+    $("#editid").val(data._id);
+    $("#editcoupon_name").val(data.coupon_name);
+    $("#editcoupon_code").val(data.coupon_code);
+    $("#editvalid_start_date").val(data.valid_start_date);
+    $("#editvalid_expiry_date").val(data.valid_expiry_date);
+    $("#editstatus").val(data.status);
+  });
+
+  var editform = $("#editform");
+  editform.on("submit", editSubmitHandler);
+
+  function editSubmitHandler(e) {
+    e.preventDefault();
+
+    var formData = getFormData(editform);
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/coupon/edit",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+
+<script>
+  function deleteCoupon(id) {
+    if (confirm("Do you really want to delete this record")) {
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/coupon/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>

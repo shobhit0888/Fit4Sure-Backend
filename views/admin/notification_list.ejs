@@ -1,0 +1,276 @@
+<%- include ('partials/header.ejs') %>
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Notifications</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add New Notification"
+                    >
+                      Add New 
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead>
+                        <tr class="text-center">
+                          <th>Title</th>
+                          <th>Url</th>
+                          <th>Send Type</th>
+                          <th>Send Time</th>
+                          <th>Image</th>
+                          <th>Created</th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-center">
+                        <% if(!records[0]) { %>
+                        <tr>
+                          <td colspan="100%">No Data</td>
+                        </tr>
+                        <% } else {%> <% records.forEach(function(record){ %>
+                        <tr>
+                          <td><%= record.title %></td>
+                          <td><%= record.url %></td>
+                          <td><%= record.selectedOption %></td>
+                          <td><%= record.time %></td>
+                          <td>
+                            <% if(record.image) { %>
+                            <img
+                              alt="file"
+                              src="/uploads/notifications/<%= record.image %>"
+                              class="rounded"
+                              width="70"
+                            />
+                            <% } %>
+                          </td>
+                          <td>
+                            <%= convertTimeStampToDate(record.created_at) %>
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Notification</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form class="form-horizontal form-material" id="submitForm">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-6">
+                    <input type="hidden" name="role" id="role" value="user" />
+                    <label>Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      placeholder="Title"
+                      class="form-control form-control-line"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6">
+                    <label>Url</label>
+                    <input
+                      type="text"
+                      name="url"
+                      placeholder="URL"
+                      class="form-control form-control-line"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Send Option</label>
+                    <select
+                      name="selectedOption"
+                      class="form-control"
+                      id="selectedOption"
+                    >
+                      <option value="now">Send Now</option>
+                      <option value="schedule">Schedule</option>
+                    </select>
+                  </div>
+                  <div class="col-md-6" style="display: none" id="timeDiv">
+                    <label>Time</label>
+                    <input
+                      type="time"
+                      name="time"
+                      placeholder="Time"
+                      class="form-control form-control-line"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-12">
+                    <label>Description</label>
+                    <textarea
+                      class="form-control form-control-line"
+                      id="description"
+                      name="description"
+                      placeholder="Description"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Image</label>
+                    <input
+                      type="file"
+                      name="image"
+                      placeholder="Image"
+                      accept="image/*"
+                      class="form-control form-control-line"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input
+                    type="submit"
+                    name="submitaddnewuser"
+                    class="btn mt-3 pull-right"
+                    value="Submit"
+                    style="background-color: #6fd943; color: #fff"
+                  />
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+</div>
+
+<%
+function convertTimeStampToDate(date){
+   date = Number(date)
+      var d = new Date(date),
+         month = '' + (d.getMonth() + 1),
+         day = '' + d.getDate(),
+         year = d.getFullYear();
+
+   if (month.length < 2)
+   month = '0' + month;
+   if (day.length < 2)
+   day = '0' + day;
+   var date = new Date();
+   date.toLocaleDateString();
+
+   return [day, month, year].join('-');
+}
+%>
+
+<%- include ('partials/footer.ejs') %>
+<script>
+  $("#selectedOption").on("change", function (e) {
+    if ($(this).val() == "schedule") {
+      $("#timeDiv").css("display", "block");
+    } else {
+      $("#timeDiv").css("display", "none");
+    }
+  });
+  var addform = $("#submitForm");
+  addform.on("submit", submitFormHandler);
+
+  function submitFormHandler(e) {
+    e.preventDefault();
+    if ($("#title").val() == "") {
+      renderToast({ message: "Title is required", icon: "error" });
+      return false;
+    }
+    if ($("#description").val() == "") {
+      renderToast({ message: "Description is required", icon: "error" });
+      return false;
+    }
+
+    // PREPARE FORM DATA
+    var formData = new FormData(addform[0]);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      cache: false,
+      enctype: "multipart/form-data",
+      processData: false,
+      contentType: false,
+      url: "/admin/notification/add",
+      data: formData,
+    })
+      .done((res) => {
+        console.log(res);
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.href = "/admin/notification/list";
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log("failed");
+        console.log(xhr);
+        console.log(status);
+        console.log(error);
+      });
+  }
+</script>

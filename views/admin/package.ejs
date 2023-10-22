@@ -1,0 +1,221 @@
+<%- include('partials/header.ejs') %>
+<style>
+  td {
+    width: 100px !important;
+  }
+</style>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Package</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add Package"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead style="width: 80%">
+                        <tr class="text-center">
+                          <th>Image</th>
+                          <th>Title</th>
+                          <th>Description</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="text-center">
+                        <% if(!packages[0]){ %>
+                        <tr>
+                          <td colspan="100%">No Data</td>
+                        </tr>
+                        <% } else {%><% packages.forEach(function(packages){ %>
+                        <tr>
+                          <td>
+                            <img
+                              src="/uploads/package/<%= packages.image %> "
+                              alt="image"
+                              height="50px"
+                              width="50px"
+                            />
+                          </td>
+
+                          <td><%= packages.title %></td>
+                          <td><%= packages.description %></td>
+                          <td>
+                            <i
+                              class="btn btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deletepackage('<%= packages.id %>');"
+                            ></i>
+                          </td>
+                        </tr>
+                        <% }) } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Package</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form
+              id="addform"
+              class="mx-5 form-group font-weight-bold showcursor: true"
+            >
+              <div class="mb-3">
+                <label>Image: </label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="image"
+                  name="image"
+                  accept="image/*"
+                />
+              </div>
+              <div class="mb-3">
+                <label>Title: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  placeholder="Title"
+                />
+              </div>
+              <div class="mb-3">
+                <label>Description: </label>
+                <textarea class="form-control" name="description"></textarea>
+              </div>
+              <button
+                type="submit"
+                class="btn mt-3 pull-right"
+                style="background-color: #6fd943; color: #fff"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+</div>
+
+<%- include ('partials/footer.ejs') %>
+
+<script>
+  var addform = $("#addform");
+  addform.on("submit", addsubmitHandler);
+
+  function addsubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = new FormData(addform[0]);
+    console.log(formData);
+
+    // // DO POST
+    $.ajax({
+      type: "POST",
+      cache: false,
+      enctype: "multipart/form-data",
+      processData: false,
+      contentType: false,
+      url: "/admin/package/add",
+      data: formData,
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+
+<script>
+  function deletepackage(id) {
+    if (confirm("Do you really want to delete this record")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/package/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>

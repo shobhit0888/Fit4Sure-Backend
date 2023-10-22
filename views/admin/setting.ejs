@@ -1,0 +1,248 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Setting</h4>
+                <div class="head-right-btn">
+                  <!-- <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add setting"
+                    >
+                      Add
+                    </a>
+                  </button> -->
+                </div>
+              </div>
+            </div>
+
+            <div class="body">
+              <div class="modal-body">
+                <form
+                  id="addform"
+                  class="form-group font-weight-bold showcursor: true"
+                >
+                  <div class="row">
+                    <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                      <label for="col_one" class="form-label">Web Service Title</label>
+                        <input
+                          type="text"
+                          name="web_service_title"
+                          id="web_service_title"
+                          class="form-control"
+                          placeholder="web_service_title"
+                          value="<%= web_service_title %>"
+                        />
+                    </div>
+                    <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                      <label for="col_one" class="form-label">Web Service Description</label>
+                        <textarea
+                          type="text"
+                          name="web_service_description"
+                          id="web_service_description"
+                          class="form-control"
+                          placeholder="web_service_description"
+                        >
+                            <%= web_service_description %>
+                        </textarea>
+                    </div>
+                    <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                      <label for="col_one" class="form-label">Transformation Title</label>
+                        <input
+                          type="text"
+                          name="transformation_title"
+                          id="transformation_title"
+                          class="form-control"
+                          placeholder="transformation_title"
+                          value="<%= transformation_title %>"
+                        />
+                    </div>
+                    <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                      <label for="col_one" class="form-label">Transformation Description</label>
+                        <textarea
+                          type="text"
+                          name="transformation_description"
+                          id="transformation_description"
+                          class="form-control"
+                          placeholder="transformation_description"
+                        >
+                            <%= transformation_description %>
+                        </textarea>
+                    </div>
+                    <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                      <label for="col_one" class="form-label">Food Type Title</label>
+                        <input
+                          type="text"
+                          name="food_type_title"
+                          id="food_type_title"
+                          class="form-control"
+                          placeholder="food_type_title"
+                          value="<%= food_type_title %>"
+                        />
+                    </div>
+                    <!-- steps_title -->
+                    <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                      <label for="col_one" class="form-label">Steps Title</label>
+                        <input
+                          type="text"
+                          name="steps_title"
+                          id="steps_title"
+                          class="form-control"
+                          placeholder="steps_title"
+                          value="<%= steps_title %>"
+                        />
+                    </div>
+                    <!-- steps_description -->
+                    <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                      <label for="col_one" class="form-label">Steps Description</label>
+                        <textarea
+                          type="text"
+                          name="steps_description"
+                          id="steps_description"
+                          class="form-control"
+                          placeholder="steps_description"
+                        >
+                            <%= steps_description %>
+                        </textarea>
+                    </div>
+                    </div>
+
+                  <button
+                    type="submit"
+                    class="btn mt-3 pull-right"
+                    style="background-color: #6fd943; color: #fff"
+                  >
+                    Add
+                  </button>
+                </form>
+              </div>
+              <div class="col-md-12 modal-footer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add setting</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+</div>
+
+<%- include ('partials/footer.ejs') %>
+
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  const form = $("#addform");
+
+  form.on("submit", submitHandler);
+
+  function submitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    let formData = $("form");
+    let data = {
+        web_service_title: formData.find("#web_service_title").val(),
+        web_service_description: formData.find("#web_service_description").val(),
+        transformation_title: formData.find("#transformation_title").val(),
+        transformation_description: formData.find("#transformation_description").val(),
+        food_type_title: formData.find("#food_type_title").val(),
+        steps_title: formData.find("#steps_title").val(),
+        steps_description: formData.find("#steps_description").val(),
+    };
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/setting/add",
+      data: JSON.stringify(data),
+    })
+
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+<script>
+  function deletesetting(id) {
+    if (confirm("Do you really want to delete this record")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/setting/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>

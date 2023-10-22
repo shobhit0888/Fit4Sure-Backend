@@ -1,0 +1,385 @@
+<%- include('partials/header.ejs') %>
+<!-- multipart select -->
+<style>
+  /* #output {
+    padding: 20px;
+    background: #dadada;
+  } */
+
+  form {
+    margin-top: 20px;
+  }
+
+  select {
+    width: 300px;
+  }
+
+
+</style>
+<!-- end of multipart select -->
+
+<!-- Main Sidebar End -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row mt-1">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header border"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <h4 class="float-left">Add Trainer</h4>
+              <div class="ml-5">
+                <a
+                  href="/admin/trainer/list"
+                  class="btn btn-primary float-right text-white"
+                >
+                  Close
+                </a>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="clearfix mb-3"></div>
+              <div class="row">
+                <div class="mb-3">
+                  <div class="col-12 col-lg-12">
+                    <form
+                      id="addform"
+                      class="form-group font-weight-bold showcursor: true"
+                    >
+                      <div class="row mg-b-25">
+                        <div id="output"></div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label"> Category:</label>
+                            <div class="form-group add-university-form">
+                              <select
+                                data-placeholder="Choose Category..."
+                                id="select_category"
+                                name="category"
+                                multiple
+                                class="chosen-select"
+                              >
+                                <% categories.forEach(function(element) { %>
+                                <option value="<%= element._id %>">
+                                  <%= element.name %>
+                                </option>
+                                <% }); %>
+                              </select>             
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label"> Name:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="name"
+                                id="name"
+                                type="text"
+                                placeholder="Enter Name"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">Email:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="email"
+                                id="email"
+                                type="email"
+                                placeholder="Enter Email"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">Mobile No:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="phone"
+                                id="phone"
+                                type="text"
+                                placeholder="Enter Mobile Number"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label"
+                              >Experience (Year):</label
+                            >
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="experience_year"
+                                id="experience_year"
+                                type="text"
+                                placeholder="Enter Experience Year"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">Location:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="location"
+                                id="location"
+                                type="text"
+                                placeholder="Enter Location"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">Bank Name</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="bank_name"
+                                id="bank_name"
+                                type="text"
+                                placeholder="Enter Bank Name"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label"
+                              >Account Holder Name:</label
+                            >
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="account_holder_name"
+                                id="account_holder_name"
+                                type="text"
+                                placeholder="Enter Account Holder Name"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label"
+                              >Account Number:</label
+                            >
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="account_no"
+                                id="account_no"
+                                type="text"
+                                placeholder="Enter Account Number"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">IFSC CODE:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="ifsc_code"
+                                id="ifsc_code"
+                                type="text"
+                                placeholder="Enter IFSC CODE"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">Branch:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="branch"
+                                id="branch"
+                                type="text"
+                                placeholder="Enter Branch"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">UPI:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="upi"
+                                id="upi"
+                                type="text"
+                                placeholder="Enter UPI"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">Experties:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="experties"
+                                id="experties"
+                                type="text"
+                                placeholder="Enter Experties"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">Rating:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="rating"
+                                id="rating"
+                                type="number"
+                                placeholder="Enter Rating"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">People Trained:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="people_trained"
+                                id="people_trained"
+                                type="number"
+                                placeholder="Enter People Trained"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label class="form-control-label">Website Description:</label>
+                            <div class="input-group">
+                              <textarea
+                                class="form-control"
+                                name="website_desc"
+                                id="website_desc"
+                                type="text"
+                                placeholder="Enter Website Description"
+                              ></textarea>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-lg-4">
+                          <div class="form-group">
+                            <label class="form-control-label">Photo:</label>
+                            <div class="input-group">
+                              <input
+                                class="form-control"
+                                name="image"
+                                id="image"
+                                type="file"
+                                placeholder="Enter UPI"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form-group">
+                            <label class="form-control-label">
+                              About Trainer:</label
+                            >
+                            <div>
+                              <textarea
+                                rows="3"
+                                class="form-control"
+                                name="about"
+                                id="about"
+                              ></textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="form-layout-footer">
+                        <button
+                          type="submit"
+                          class="btn mt-3 pull-right"
+                          style="background-color: #6fd943; color: #fff"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Main Content -->
+
+<%- include('partials/footer.ejs') %>
+<!-- multipart select -->
+<script>
+  document.getElementById("output").innerHTML = location.search;
+  $("#select_category").chosen();
+</script>
+
+<script>
+  var addform = $("#addform");
+
+  addform.on("submit", addslidersubmitHandler);
+
+  function addslidersubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = new FormData(addform[0]);
+    console.log(formData);
+    // // DO POST
+    $.ajax({
+      type: "POST",
+      enctype: "multipart/form-data",
+      cache: false,
+      processData: false,
+      contentType: false,
+      url: "/admin/trainer/add",
+      data: formData,
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.replace("/admin/trainer/list");
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>

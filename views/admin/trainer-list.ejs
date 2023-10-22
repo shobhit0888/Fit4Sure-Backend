@@ -1,0 +1,489 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <!--  Users Start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Trainers</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                  >
+                    <a
+                      href="/admin/trainer/add"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add trainer"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table id="example" class="table table-bordered table-md">
+                      <thead class="t-head">
+                        <tr class="text-center">
+                          <th>S.NO</th>
+                          <th>Image</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>Experience</th>
+                          <th>Location</th>
+                          <th>Wallet</th>
+                          <!-- <th>Created At</th> -->
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="text-center">
+                        <% if(!trainer[0]) { %>
+                        <tr>
+                          <td colspan="100%">No Data</td>
+                        </tr>
+                        <% } else {%> <%
+                        trainer.forEach(function(trainer,index){ %>
+                        <tr>
+                          <td><%= index+1 %></td>
+                          <td>
+                            <img
+                              alt="file"
+                              src= <%= trainer.image %>
+                              height="50px"
+                              width="50px"
+                            />
+                          </td>
+                          <td>
+                            <a href="/admin/trainer/details/<%= trainer._id %>"
+                              ><%= trainer.name %></a
+                            >
+                          </td>
+                          <td><%= trainer.phone %></td>
+                          <td><%= trainer.experience_year %>Year</td>
+                          <td><%= trainer.location %></td>
+                          <td><%= trainer.wallet %></td>
+
+                          <td>
+                            <button
+                              class="btn <%- trainer.approved ? 'bg-success' : 'bg-danger' %> text-white"
+                              data-toggle="modal"
+                              data-model="<%= JSON.stringify(trainer) %>"
+                              id="accept_btn"
+                              style="cursor: pointer"
+                            >
+                              <%- trainer.approved ? 'Active' : 'Inactive' %>
+                            </button>
+                          </td>
+                          <td>
+                            <i class="btn btn-info btn-md fas fa-edit" id="edit_btn" data-toggle="modal" data-model="<%= JSON.stringify(trainer) %>"></i>
+                            <i class="btn btn-danger btn-md fas fa-trash-alt" onclick="deleteblog('<%- trainer._id %>')">
+                            </i>
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Users End -->
+    </div>
+  </section>
+</div>
+
+<!-- Approved -->
+<div class="modal fade" id="action">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="actionForm" class="mx-5">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Action</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="mb-3">
+            <input name="approved" type="checkbox" id="approved" data-width="100%" data-toggle="toggle" data-on="Active" data-off="InActive" data-onstyle="success" data-offstyle="danger" />
+          </div>
+          <input name="id" type="hidden" id="actionid" name="actionid" />
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            close
+          </button>
+          <button type="submit" class="btn btn-success">save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+
+<!-- Modal body -->
+  <div class="modal fade" id="edit">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Edit</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form id="editform" class="form-group font-weight-bold showcursor: true">
+            <input type="hidden" id="editid" name="editid" />
+            <div class="row mg-b-25">
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label"> Name:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_name" id="edit_name" type="text" placeholder="Enter Name" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Email:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_email" id="edit_email" type="email" placeholder="Enter Email" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Mobile No.:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_phone" id="edit_phone" type="text" placeholder="Enter Mobile No." />
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Experience (Year):</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_experience_year" id="edit_experience_year" type="text" placeholder="Enter Experience Year" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Location:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_location" id="edit_location" type="text" placeholder="Enter Location" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Bank Name</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_bank_name" id="edit_bank_name" type="text" placeholder="Enter Bank Name" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Account Holder Name:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_account_holder_name" id="edit_account_holder_name" type="text" placeholder="Enter Account Holder Name" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Account Number:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_account_no" id="edit_account_no" type="text" placeholder="Enter Account Number" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">IFSC CODE:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_ifsc_code" id="edit_ifsc_code" type="text" placeholder="Enter IFSC CODE" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Branch:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_branch" id="edit_branch" type="text" placeholder="Enter Branch" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">UPI:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_upi" id="edit_upi" type="text" placeholder="Enter UPI" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                  <label class="form-control-label">Experties:</label>
+                  <div class="input-group">
+                    <input class="form-control" name="edit_experties" id="edit_experties" type="text" placeholder="Enter Experties" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4">
+                <div class="form-group">
+                <label class="form-control-label">People Trained:</label>
+                <div class="input-group">
+                  <input class="form-control" name="edit_people_trained" id="edit_people_trained" type="text" placeholder="Enter People Trained" />
+                </div>
+              </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="form-group">
+                <label class="form-control-label">Rating:</label>
+                <div class="input-group">
+                  <input class="form-control" name="edit_rating" id="edit_rating" type="text" placeholder="Enter Rating" />
+                </div>
+              </div>
+            </div>
+              
+            <div class="col-12">
+                <div class="form-group">
+                <label class="form-control-label">Website Description:</label>
+                <div class="input-group">
+                  <textarea class="form-control" name="edit_website_desc" id="edit_website_desc" type="text" placeholder="Enter Website Description" > </textarea>
+                </div>
+              </div>
+            </div>
+
+             
+              <div class="col-12">
+                <div class="form-group">
+                  <label class="form-control-label"> About Astrologer:</label>
+                  <div>
+                    <textarea rows="3" class="form-control" name="edit_about" id="edit_about"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- col-4 -->
+            </div>
+            <div class="form-layout-footer">
+              <button type="submit" class="btn mt-3 pull-right" style="background-color: #6fd943; color: #fff">
+                Save
+              </button>
+            </div>
+            <!-- form-layout-footer -->
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%- include ('partials/footer.ejs') %>
+<script>
+  $(document).ready(function() {
+    $("#example").DataTable();
+  });
+
+  $(document).on("click", "#edit_btn", function(e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#edit").modal("show");
+    var data = finalData;
+    $("#editid").val(data._id);
+    $("#edit_name").val(data.name);
+    $("#edit_email").val(data.email);
+    $("#edit_phone").val(data.phone);
+    $("#edit_experience_year").val(data.experience_year);
+    $("#edit_location").val(data.location);
+    $("#edit_experties").val(data.experties);
+    $("#edit_bank_name").val(data.bank_name);
+    $("#edit_account_holder_name").val(data.account_holder_name);
+    $("#edit_account_no").val(data.account_no);
+    $("#edit_ifsc_code").val(data.ifsc_code);
+    $("#edit_branch").val(data.branch);
+    $("#edit_upi").val(data.upi);
+    $("#edit_people_trained").val(data.people_trained);
+    $("#edit_rating").val(data.rating);
+    $("#edit_website_desc").val(data.website_desc);
+    $("#edit_about").val(data.about);
+  });
+
+  var editform = $("#editform");
+  editform.on("submit", editSubmitHandler);
+
+  function editSubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = getFormData(editform);
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/trainer/edit",
+        data: JSON.stringify(formData),
+      })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({
+            message: res.message,
+            icon: "error"
+          });
+        } else {
+          renderToast({
+            message: res.message,
+            icon: "success"
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function(xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+
+<script>
+  function deleteblog(id) {
+    if (confirm("Do you really want to delete this record")) {
+      // DO POST
+      $.ajax({
+          type: "POST",
+          contentType: "application/json",
+          url: "/admin/trainer/delete",
+          data: JSON.stringify({
+            id: id,
+          }),
+        })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({
+              message: res.message,
+              icon: "error"
+            });
+          } else {
+            renderToast({
+              message: res.message,
+              icon: "success"
+            });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+        })
+        .fail(function(xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>
+
+<script>
+  $(document).on("click", "#accept_btn", function(e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#action").modal("show");
+    var data = finalData;
+    // console.log(data)
+
+    $("#actionid").val(data._id);
+
+    approved
+      ?
+      $("#approved").bootstrapToggle("on") :
+      $("#approved").bootstrapToggle("off");
+  });
+</script>
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function(n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  var actionForm = $("#actionForm");
+  actionForm.on("submit", addslidersubmitHandler);
+
+  function addslidersubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = getFormData(actionForm);
+    formData.approved = $("#approved").is(":checked");
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/trainer/approved",
+        data: JSON.stringify(formData),
+      })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({
+            message: res.message,
+            icon: "error"
+          });
+        } else {
+          renderToast({
+            message: res.message,
+            icon: "success"
+          });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      })
+      .fail(function(xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+
+

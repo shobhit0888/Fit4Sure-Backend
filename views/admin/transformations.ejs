@@ -1,0 +1,228 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Transformations</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add Transformations"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead>
+                        <tr>
+                          <th>Before</th>
+                          <th>After</th>
+                          <th>created at</th>
+                          <th>Delete</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(!transformations[0]) { %>
+                        <tr>
+                          <td colspan="100%" class="text-center">
+                            No transformations
+                          </td>
+                        </tr>
+                        <% } else {%> <% transformations.forEach(function(transformations){ %>
+                        <tr>
+                          <td>
+                            <img
+                              src="/uploads/transformations/<%= transformations.before_image %>"
+                              alt="transformations"
+                              height="50px"
+                              width="50px"
+                            />
+                          </td>
+                          <td>
+                            <img
+                              src="/uploads/transformations/<%= transformations.after_image %>"
+                              alt="transformations"
+                              height="50px"
+                              width="50px"
+                            />
+                          </td>
+                          <td><%= transformations.created_at %></td>
+                          <td>
+                            <i
+                              class="btn btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deletetransformations('<%= transformations._id %>');"
+                            ></i>
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form
+              id="addnewslider"
+              class="mx-5 form-group font-weight-bold showcursor: true"
+            >
+              
+              <div class="mb-3">
+                <label for="before_image" class="form-label"
+                  >Before Image</label
+                >
+                <input
+                  type="file"
+                  class="form-control"
+                  id="before_image"
+                  name="before_image"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="after_image" class="form-label">After Image</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="after_image"
+                  name="after_image"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="btn mt-3 pull-right"
+                style="background-color: #6fd943; color: #fff"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+  $(document).ready(function () {
+    $("#example").DataTable();
+  });
+
+  var addForm = $("#addnewslider");
+
+  addForm.on("submit", addsubmitHandler);
+
+  function addsubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = new FormData(addForm[0]);
+    // console.log(formData);
+    // var data = {
+    //     before_image: $("#before_image").val(),
+    //     after_image: $("#after_image").val(),
+    //     };
+    // console.log(data);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      enctype: "multipart/form-data",
+      processData: false,
+      contentType: false,
+      url: "/admin/transformations/add",
+      data: formData,
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+
+  function deletetransformations(id) {
+    if (confirm("Do you really want to delete this slider")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/transformations/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>

@@ -1,0 +1,67 @@
+<script src="/assets/js/jquery.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<% setting_footer.forEach(e => { %>
+    <footer class="footer-section container-fluid">
+      <div>
+        <p class="footer-heading"><%= e.title %></p>
+      </div>
+      <div class="main-footer-section">
+        <div class="footer-img-container">
+          <img src="/uploads/footer/<%= e.logo %>" alt="image12" />
+        </div>
+        <p class="footer-heading-small">Fit4sure</p>
+        <div class="footer-app-buttons">
+          <a href="<%= e.playstore_link %>">
+            <img
+              class="img-fluid"
+              src="/website/assets/images/Google Play.png"
+              alt="google-play"
+            />
+          </a>
+          <a href="<%= e.appstore_link %>"
+            ><img
+              class="img-fluid"
+              src="/website/assets/images/appStore.png"
+              alt="app-store"
+          /></a>
+        </div>
+        <div class="footer-horizontal-line"></div>
+        <div class="social-media-icons">
+          <a href="<%= e.youtube_link %>"
+            ><img src="/website/assets/images/youtube.svg" alt="youtube"
+          /></a>
+    
+          <a href="<%= e.instagram_link %>"
+            ><img src="/website/assets/images/instagram.svg" alt="instagram"
+          /></a>
+          <a href="<%= e.twitter_link %>"
+            ><img src="/website/assets/images/twitter.svg" alt="twitter"
+          /></a>
+          <a href="<%= e.facebook_link %>"
+            ><img src="/website/assets/images/facebook.svg" alt="facebook"
+          /></a>
+        </div>
+        <p class="footer-text"><%= e.description %></p>
+      </div>
+      <div class="footer-links-container">
+        <h3>Company</h3>
+        <ul class="footer-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="/website/aboutus">About Us</a></li>
+          <li><a href="#">Our Services</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Contact us</a></li>
+        </ul>
+        <button>
+          <p>Talk to us</p>
+          <img src="/website/assets/images/arrow-left-thin.svg" alt="arrow-left" />
+        </button>
+      </div>
+      <p class="copyright">Copyright fit4sure © 2022 All Rights Reserved</p>
+    </footer>
+    <% }) %> 
+</body>
+</html>

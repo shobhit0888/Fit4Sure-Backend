@@ -1,0 +1,83 @@
+<%- include('partials/header.ejs') %>
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <!--  About Us Start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Privacy Policy</h4>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <form
+                id="form"
+                class="form-group font-weight-bold showcursor: true"
+              >
+                <div class="row">
+                  <div class="col-12 col-lg-12">
+                    <div class="mb-3">
+                      <label>Content : -</label>
+                      <textarea name="content" id="summernote">
+                                                <%= content %> 
+                                            </textarea
+                      >
+                    </div>
+                    <button
+                      type="submit"
+                      class="btn mt-3 pull-right"
+                      style="background-color: #6fd943; color: #fff"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- About Us Ends -->
+    </div>
+  </section>
+</div>
+
+<%- include ('partials/footer.ejs') %>
+<script>
+  const form = $("#form");
+
+  form.on("submit", submitHandler);
+
+  function submitHandler(e) {
+    e.preventDefault();
+
+    var formData = getFormData($("#form"));
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "privacypolicy",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>

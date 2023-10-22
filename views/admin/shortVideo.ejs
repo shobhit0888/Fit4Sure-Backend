@@ -1,0 +1,340 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Short videos</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add Short Video"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead class="t-head">
+                        <tr>
+                          <th>S.No</th>
+                          <th>Video</th>
+                          <th>Tite</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% if(!shortVideo[0]){%>
+                        <tr>
+                          <td colspan="4">No Short Video Found</td>
+                        </tr>
+                        <% } else {
+                        shortVideo.forEach(function(shortVideo,index){ %>
+                        <tr>
+                          <td><%= index+1%></td>
+                          <td>
+                            <video width="80" height="60" controls>
+                              <source
+                                src="<%= shortVideo.video %>"
+                                type="video/mp4"
+                              />
+                            </video>
+                          </td>
+                          <td><%= shortVideo.title %></td>
+                          <td>
+                            <button
+                              class="btn <%- shortVideo.approved ? 'bg-success' : 'bg-danger' %> text-white"
+                              data-toggle="modal"
+                              data-model="<%= JSON.stringify(shortVideo) %>"
+                              id="accept_btn"
+                              style="cursor: pointer"
+                            >
+                              <%- shortVideo.approved ? 'Active' : 'Inactive' %>
+                            </button>
+                          </td>
+
+                          <td>
+                            <i
+                              class="btn btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deletevideo('<%-shortVideo._id %>')"
+                            >
+                            </i>
+                          </td>
+                        </tr>
+                        <% }); } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal fade" id="action">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="actionForm" class="mx-5">
+          <div class="modal-header">
+            <h4 class="modal-title">Action</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <div class="mb-3">
+              <input
+                name="approved"
+                type="checkbox"
+                id="approved"
+                data-width="100%"
+                data-toggle="toggle"
+                data-on="Active"
+                data-off="InActive"
+                data-onstyle="success"
+                data-offstyle="danger"
+              />
+            </div>
+            <input name="id" type="hidden" id="actionid" name="actionid" />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              close
+            </button>
+            <button type="submit" class="btn btn-success">save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="myModal">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Short Video</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form
+              id="addform"
+              class="form-group font-weight-bold showcursor: true"
+            >
+              <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                <label for="title" class="form-label">Title</label>
+                <input
+                  name="title"
+                  id="title"
+                  class="form-control"
+                  placeholder="Title"
+                />
+              </div>
+              <div class="mb-3 d-grid gap-2 col-12 mx-auto">
+                <label for="image" class="form-label">Video</label>
+                <input
+                  id="video"
+                  name="vdieo"
+                  class="form-control"
+                  placeholder="Video"
+                  type="file"
+                  accept="video/*"
+                />
+              </div>
+
+              <button
+                type="submit"
+                class="btn mt-3 pull-right"
+                style="background-color: #6fd943; color: #fff"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include ('partials/footer.ejs') %>
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  const form = $("#addform");
+
+  form.on("submit", submitHandler);
+
+  function submitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    let formData = new FormData();
+    formData.append("title", $("#title").val());
+    formData.append("video", $("#video")[0].files[0]);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: false,
+      processData: false,
+      url: "/admin/shortvideo/add",
+      data: formData,
+    })
+
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+<script>
+  function deletevideo(id) {
+    if (confirm("Do you really want to delete this record")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/shortvideo/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>
+
+<script>
+  $(document).on("click", "#accept_btn", function (e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#action").modal("show");
+    var data = finalData;
+    // console.log(data)
+
+    $("#actionid").val(data._id);
+
+    approved
+      ? $("#approved").bootstrapToggle("on")
+      : $("#approved").bootstrapToggle("off");
+  });
+</script>
+
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  var actionForm = $("#actionForm");
+  actionForm.on("submit", addslidersubmitHandler);
+
+  function addslidersubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = getFormData(actionForm);
+    formData.approved = $("#approved").is(":checked");
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/shortvideo/approved",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>

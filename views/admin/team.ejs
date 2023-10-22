@@ -1,0 +1,372 @@
+<%- include('partials/header.ejs') %> <%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Fit Team</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add Team"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Image</th>
+                          <th>Facebook</th>
+                            <th>Twitter</th>
+                            <th>Instagram</th>
+                            <th>Experties</th>
+                          <th>created at</th>
+                          <!-- <th>Delete</th> -->
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(!team[0]) { %>
+                        <tr>
+                          <td colspan="100%" class="text-center">No team</td>
+                        </tr>
+                        <% } else {%> <% team.forEach(function(team){ %>
+                        <tr>
+                            <td><%= team.name %></td>
+                          <td>
+                            <img
+                              src="/uploads/Team/<%= team.image %>"
+                              alt="team"
+                              height="50px"
+                              width="50px"
+                            />
+                          </td>
+                            <td><%= team.facebook %></td>
+                            <td><%= team.twitter %></td>
+                            <td><%= team.instagram %></td>
+                            <td><%= team.experties %></td>
+                          <td><%= team.created_at %></td>
+                          <td class="d-flex justify-content-between align-center">
+                            <i
+                            class="btn btn-info btn-lg fas fa-edit"
+                              id="edit_btn"
+                              data-toggle="modal"
+                              data-model="<%= JSON.stringify(team) %>"
+                            ></i>
+                            <i
+                            class="btn btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deleteteam('<%= team._id %>');"
+                            ></i>
+
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form id="addnewteam" class="mx-5 form-group font-weight-bold showcursor: true">
+                <div class="row">
+                    <div class="form-data mb-3 w-50">
+                        <label for="name">Name</label>
+                        <input type="text" name="name" id="name" class="form-control" placeholder="Enter name" >
+                    </div>
+                    <div class="form-data mb-3 w-50">
+                        <label for="facebook">facebook</label>
+                        <input type="text" name="facebook" id="facebook" class="form-control" placeholder="Enter facebook" >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-data mb-3 w-50">
+                    <label for="twitter">Twitter</label>
+                    <input type="text" name="twitter" id="twitter" class="form-control" placeholder="Enter twitter" >
+                </div>
+                <div class="form-data mb-3 w-50">
+                    <label for="instagram">Instagram</label>
+                    <input type="text" name="instagram" id="instagram" class="form-control" placeholder="Enter instagram" >
+                </div>
+            </div>
+               
+                    <div class="form-data mb-3">
+                        <label for="experties">Experties</label>
+                        <input type="text" name="experties" id="experties" class="form-control" placeholder="Enter experties" >
+                    </div>
+                  <div class="form-data mb-3">
+                    <input
+                      type="file"
+                      class="form-control"
+                      id="image"
+                      name="image"
+                    />
+                  </div>
+                
+
+              <button
+                type="submit"
+                class="btn mt-3 pull-right"
+                style="background-color: #6fd943; color: #fff"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+
+  <!-- Modal body -->
+  <div class="modal fade" id="edit">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Team</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form
+            id="editform"
+            class="mx-5 form-group font-weight-bold showcursor: true"
+          >
+            <input type="hidden" id="editid" name="editid" />
+            
+            <div class="mb-3">
+              <label>Name</label>
+              <input
+                id="editname"
+                name="editname"
+                type="text"
+                class="form-control"
+                placeholder="Enter Title"
+              />
+            </div>
+            <div class="mb-3">
+              <label>Facebook</label>
+              <input
+                id="editfacebook"
+                name="editfacebook"
+                type="text"
+                class="form-control"
+                placeholder="Enter facebook"
+              />
+            </div>
+            <div class="mb-3">
+              <label>Twitter</label>
+              <input
+                id="edittwitter"
+                name="edittwitter"
+                type="text"
+                class="form-control"
+                placeholder="Enter twitter"
+              />
+            </div>
+            <div class="mb-3">
+              <label>Instagram</label>
+              <input
+                id="editinstagram"
+                name="editinstagram"
+                type="text"
+                class="form-control"
+                placeholder="Enter instagram"
+              />
+            </div>
+            <div class="mb-3">
+              <label>Experties</label>
+              <input
+                id="editexperties"
+                name="editexperties"
+                type="text"
+                class="form-control"
+                placeholder="Enter experties"
+              />
+            </div>
+            
+            <button
+              type="submit"
+              class="btn mt-3 pull-right"
+              style="background-color: #6fd943; color: #fff"
+            >
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+  $(document).ready(function () {
+    $("#example").DataTable();
+  });
+
+  var addteamform = $("#addnewteam");
+
+  addteamform.on("submit", addteamubmitHandler);
+
+  function addteamubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = new FormData(addteamform[0]);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      enctype: "multipart/form-data",
+      processData: false,
+      contentType: false,
+      url: "/admin/team/add",
+      data: formData,
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+
+  function deleteteam(id) {
+
+    if (confirm("Do you really want to delete this team")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/team/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+
+
+  $(document).on("click", "#edit_btn", function (e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#edit").modal("show");
+    var data = finalData;
+    $("#editid").val(data._id);
+    $("#editname").val(data.name);
+    $("#editfacebook").val(data.facebook);
+    $("#edittwitter").val(data.twitter);
+    $("#editinstagram").val(data.instagram);
+    $("#editexperties").val(data.experties);
+  });
+
+  var editform = $("#editform");
+  editform.on("submit", editSubmitHandler);
+
+  function editSubmitHandler(e) {
+    e.preventDefault();
+
+    var formData = getFormData(editform);
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/team/edit",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+
+
+</script>

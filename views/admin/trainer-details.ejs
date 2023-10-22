@@ -1,0 +1,235 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+
+        <!-- trainer -->
+        <div class="col-md-12">
+          <div class="card">
+            <div class="card-header" style="background-color: #6fd943">
+              <h4>Personal Information</h4>
+            </div>
+            <div class="personal-information row m-2 pt-2">
+              <div class="col-md-9 d-flex justify-content-between">
+                <h6><b>Full Name:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.name %></span>
+                <h6><b>Mobile :</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.phone %></span>
+                <h6><b>Wallet:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.wallet %></span>
+              </div>
+              <div class="col-md-6 d-flex justify-content-between"></div>
+            </div>
+
+            <div class="personal-information row m-2 pt-2 pb-2" style="border-top: 1px solid #cdc3c3">
+              <div class="col-md-9 d-flex justify-content-between">
+                <h6><b>Location:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.location %></span>
+                <h6><b>Experience:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.experience_year %>&nbsp;years</span>
+                <h6><b>Experties:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.experties %></span>
+
+              </div>
+              <div class="col-md-6 d-flex justify-content-between"></div>
+            </div>
+            <div class="personal-information row m-2 pt-2 pb-2" style="border-top: 1px solid #cdc3c3">
+              <div class="col-md-9 d-flex justify-content-between">
+                <h6><b>Bank Name:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.bank_name %></span>
+                <h6><b>Account No:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.account_no %></span>
+                <h6><b>IFSC Code:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.ifsc_code %></span>
+              </div>
+              <div class="col-md-6 d-flex justify-content-between"></div>
+            </div>
+            <div class="personal-information row m-2 pt-2 pb-2" style="border-top: 1px solid #cdc3c3">
+              <div class="col-md-9 d-flex justify-content-between">
+                <h6><b>Branch:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.branch %></span>
+                <h6><b>Account Holder Name:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.account_holder_name %></span>
+                <h6><b>UPI:</b></h6>
+                <span style="color: #2e2d2d;"><%= trainerDetails.upi %></span>
+              </div>
+              <div class="col-md-6 d-flex justify-content-between"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add Fund Request List -->
+  <section class="section">
+    <div class="section-body">
+      <!--  Add Fund Request List start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="background-color: #6fd943">
+              <div class="col-12 row card-header-box">
+                <div class="col-md-6">
+                  <h4 class="float-left">Payment Information</h4>
+                  <br />
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <!--  -->
+
+              <!--  -->
+
+              <div class="row m-2">
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table id="example1" class="table">
+                      <thead>
+                        <tr>
+                          <td>S.NO</td>
+                          <td>Amount</td>
+                          <td>transaction Id</td>
+                          <td>Date</td>
+                          <td>Status</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(!trainerDetails.orders[0]) { %>
+                        <tr>
+                          <td colspan="100%" class="text-danger text-center">No Data</td>
+                        </tr>
+                        <% } else {%> <% trainerDetails.orders.forEach(function(order,index){ %>
+                        <td><%= index+1 %></td>
+                        <td><%= order.amount %></td>
+                        <td><%= order.order_id %></td>
+                        <td><%= order.created_at %></td>
+                        <td><%= order.status %></td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Select Game list ends-->
+    </div>
+  </section>
+
+  <!-- withdraw Fund Request List -->
+  <section class="section">
+    <div class="section-body">
+      <!--  Withdraw Fund Request List start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="background-color: #6fd943">
+              <div class="col-12 row card-header-box">
+                <div class="col-md-6">
+                  <h4 class="float-left">Schedule Information</h4>
+                  <br />
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <!--  -->
+
+              <!--  -->
+
+              <div class="row m-2">
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table id="example2" class="table">
+                      <thead>
+                        <tr>
+                          <td>S.NO</td>
+                          <td>User Name</td>
+                          <td>Date</td>
+                          <td>Time</td>
+                          <td>Status</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(!trainerDetails.classes[0]) { %>
+                        <tr>
+                          <td colspan="100%" class="text-danger text-center">No Data</td>
+                        </tr>
+                        <% } else {%> <% trainerDetails.classes.forEach(function(schedule,index){ %>
+                        <td><%= index+1 %></td>
+                        <td><%= schedule.user.name%></td>
+                        <td><%= schedule.date %></td>
+                        <td><%= schedule.time %></td>
+                        <td><%= schedule.status %></td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Select Game list ends-->
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-body">
+      <!--  Add Fund Request List start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header" style="background-color: #6fd943">
+              <div class="col-12 row card-header-box">
+                <div class="col-md-6">
+                  <h4 class="float-left">withdrawal Request</h4>
+                  <br />
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-0">
+              <!--  -->
+
+              <!--  -->
+
+              <div class="row m-2">
+                <div class="col-12">
+                  <div class="table-responsive">
+                    <table id="example1" class="table">
+                      <thead>
+                        <tr>
+                          <td>S.NO</td>
+                          <td>Amount</td>
+                          <td>Date</td>
+                          <td>Time</td>
+                          <td>Status</td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                            <td colspan="100%" class="text-danger text-center">No Data</td>
+                          </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--Select Game list ends-->
+    </div>
+  </section>
+
+</div>
+
+<%- include ('partials/footer.ejs') %>
