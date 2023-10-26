@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken");
 const otpGenerator = require("otp-generator");
 const Otp = require("../../models/Otp");
 const User = require("../../models/User");
+const Trainer = require("../../models/Trainer");
 const Coupon = require("../../models/Coupon");
 const Notification = require("../../models/Notification");
 require("dotenv").config();
@@ -73,6 +74,33 @@ const uploadImageToFirebase = async (imageFile) => {
 };
 
 class AuthController {
+  static trainer_signin = async (req, res) => {
+    const { email, password } = req.body;
+    try {
+      const existingUser = await Trainer.findOne({ email });
+
+      if (!existingUser)
+        return res.status(404).json({ message: "Trainer does not exist" });
+
+      const isPasswordCorrect = await bcrpyt.compare(
+        password,
+        existingUser.password
+      );
+
+      if (!isPasswordCorrect)
+        return res.status(400).json({ message: "Invalid credentials" });
+
+      const token = jwt.sign(
+        { email: existingUser.email, id: existingUser._id },
+        process.env.TOKEN_SECRET,
+        { expiresIn: "1h" }
+      );
+
+      res.status(200).json({ result: existingUser, token });
+    } catch (error) {
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  };
   static signin = async (req, res) => {
     const { email, password } = req.body;
 
@@ -103,6 +131,7 @@ class AuthController {
   };
 
   static signup = async (req, res) => {
+    console.log(req.body);
     const {
       email,
       password,
@@ -115,6 +144,7 @@ class AuthController {
     try {
       const existingUser = await User.findOne({ email });
       const existingno = await User.findOne({ contactNumber });
+      console.log(existingno);
       if (existingUser)
         return res.status(400).json({ message: "User already exists" });
       if (existingno)
@@ -142,8 +172,14 @@ class AuthController {
         process.env.TOKEN_SECRET,
         { expiresIn: "1h" }
       );
-
-      res.status(200).json({ result, token });
+      const options = {
+        expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+      };
+      //save in cookie
+      res.status(200).cookie("token", token, options).json({
+        result,
+      });
     } catch (error) {
       res.status(500).json({ message: "Something went wrong" });
     }
@@ -406,7 +442,7 @@ class AuthController {
   //     //       update_at: Date.now(),
   //     //     }
   //     //   );
-  //     // } 
+  //     // }
   //     // else {
   //     //   const otp = Otp({
   //     //     user,
@@ -423,87 +459,134 @@ class AuthController {
   //   }
   // };
 
-  static login = async(req,res) => {
-     const mobile_number = req.body.mobile_number;
-    //  console.log(mobile_number)
-     let msg = "Something went wrong please try again later";
+  static login = async (req, res) => {
+    const mobile_number = req.body.contactNumber;
+    console.log(mobile_number);
+    let msg = "Something went wrong please try again later";
     //  var mobile_regex = /^\d{10}$/;
     //  if (!mobile_regex.test(mobile_number)) {
     //    return res.status(401).send("Invalid Mobile Number");
     //  }
-     try
-     {
-        let user = await User.findOne({ contactNumber:mobile_number });
-        if (user == null || user.contactNumber == null) {
-          console.log("register yourself");
-        }
-        // if (user.contactNumber == null) {
-        //   res.send("update yourself");
-        // }
+    try {
+      let user = await User.findOne({ contactNumber: mobile_number });
+      if (user == null || user.contactNumber == null) {
+        console.log("register yourself");
+      }
+      // if (user.contactNumber == null) {
+      //   res.send("update yourself");
+      // }
 
-        const client = require("twilio")(accountSid, authToken);
+      const client = require("twilio")(accountSid, authToken);
 
-        client.verify.v2
-          .services(verifySid)
-          .verifications.create({ to: user.contactNumber , channel: "sms" })
-          .then((verification) => console.log(verification.status))
-          .then(() => {
-            const readline = require("readline").createInterface({
-              input: process.stdin,
-              output: process.stdout,
-            });
-            readline.question("Please enter the OTP:", (otpCode) => {
-              client.verify.v2
-                .services(verifySid)
-                .verificationChecks.create({
-                  to: user.contactNumber ,
-                  code: otpCode,
-                })
-                .then((verification_check) =>
-                  {
-                    console.log(verification_check.status)
-                    if(verification_check.status == "pending")
-                    {console.log("Invalid OTP")}
-                  }
-                )
-                .then(() => readline.close());
-            });
+      client.verify.v2
+        .services(verifySid)
+        .verifications.create({ to: user.contactNumber, channel: "sms" })
+        .then((verification) => console.log(verification.status))
+        .then(() => {
+          const readline = require("readline").createInterface({
+            input: process.stdin,
+            output: process.stdout,
           });
-     }
-     catch(err)
-     {
-        console.log(err)
-        res.send(err)
-     }
-  }
+          readline.question("Please enter the OTP:", (otpCode) => {
+            client.verify.v2
+              .services(verifySid)
+              .verificationChecks.create({
+                to: user.contactNumber,
+                code: otpCode,
+              })
+              .then((verification_check) => {
+                console.log(verification_check.status);
+                if (verification_check.status == "pending") {
+                  console.log("Invalid OTP");
+                } else {
+                  const expiresIn = Math.floor(Date.now() / 1000) + 315360000;
+                  const token = jwt.sign(
+                    {
+                      id: user._id,
+                      contactNumber: mobile_number,
+                    },
+                    process.env.TOKEN_SECRET,
+                    { expiresIn } // Set expiresIn to a string like 'never'
+                  );
+                  const options = {
+                    expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+                    httpOnly: true,
+                  };
+                  //save in cookie
+                  res.status(200).cookie("token", token, options).json({
+                    result: user,
+                  });
+                }
+              })
+              .then(() => readline.close());
+          });
+        });
+    } catch (err) {
+      console.log(err);
+      res.send(err);
+    }
+  };
 
-  static otp_verify = async (req, res) => {
+  // static otp_verify = async (req, res) => {
+  //   let msg = "Something went wrong please try again later";
+  //   try {
+  //     const { mobileNumber, otp } = req.body;
+
+  //     // Check if the OTP exists for the given mobile number
+  //     if (otpStorage[mobileNumber] === otp) {
+  //       res.send("OTP is valid.");
+  //       delete otpStorage[mobileNumber]; // Remove the used OTP from storage
+  //     } else {
+  //       res.status(400).send("Invalid OTP.");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res.status(401).send(msg);
+  //   }
+  // };
+
+  // static sendOTP = async (req, res) => {
+  //   let msg = "Something went wrong please try again later";
+  //   try {
+  //     const { mobileNumber } = req.body;
+  // const otp = generateOTP();
+  // otpStorage[mobileNumber] = otp;
+
+  //  client.messages
+  //   .create({
+  //     body: `Your OTP is: ${otp}`,
+  //     from: twilioPhoneNumber,
+  //     to: mobileNumber,
+  //   })
+  //   .then(() => {
+  //     res.send('OTP sent successfully.');
+  //   })
+  //   .catch((err) => {
+  //     console.error(err);
+  //     res.status(500).send('Failed to send OTP.');
+  //   });
+  // }
+
+  static findmycoach = async (req, res) => {
     let msg = "Something went wrong please try again later";
     try {
-      const mobile_number = req.body;
-      const user = await User.findOne({ mobile_number });
-      if (!user) return res.status(404).send("User not found");
-      // const userOtp = await Otp.findOne({ user });
-      let is_registered = 0;
-      if (user && user.mobile_number && user.mobile_number != "") {
-        is_registered = 1;
-      }
-      if (otp == userOtp.otp) {
-        //create and assign a token
-        const token = jwt.sign(
-          {
-            _id: user._id,
-          },
-          process.env.TOKEN_SECRET
-        );
-        let returnData = {
-          token: token,
-          is_registered: is_registered,
-        };
-        return res.send(returnData);
-      }
-      return res.status(401).send("Invalid otp");
-    } catch (error) {
+      var gender = req.body.gender;
+      var language = req.body.language;
+      var category = req.body.category;
+      const coach = await Trainer.find({
+        $and: [
+          { gender: gender },
+          { language: language },
+          { category: category },
+        ],
+      });
+      if (coach)
+        return res.json({
+          message: "coach found successfully",
+          success: true,
+          data: coach,
+        });
+    } catch (err) {
       console.log(error);
       return res.status(401).send(msg);
     }
@@ -603,6 +686,7 @@ class AuthController {
     //   return res.status(401).send(msg);
     // }
   };
+
   static coupon_verify = async (req, res) => {
     // let msg = "Something went wrong please try again later";
     // try {

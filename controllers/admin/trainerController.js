@@ -5,7 +5,9 @@ const Category = require("../../models/Category");
 const multer = require("multer");
 const imageFilter = require("../../config/imageFilter");
 const firebaseApp = require("../../firebase");
-
+const accountSid = "ACcd02be05ad3b49e27407ac84a181c97e";
+const authToken = "37419abc85f88c70d6a805054cfb4d7c";
+const verifySid = "VA1de4dc8a0847b6b5a90cd114612f743e";
 const storage = firebaseApp.storage();
 
 const bucket = firebaseApp.storage().bucket();
@@ -68,48 +70,74 @@ class TrainerController {
 
   static add = async (req, res) => {
     try {
-      upload(req, res, async function (err) {
-        if (err instanceof multer.MulterError) {
-          console.log(err);
-          return res.status(500).send(err);
-        } else if (err) {
-          console.log(err);
-          return res.status(500).send(err);
-        }
+      // upload(req, res, async function (err) {
+      //   if (err instanceof multer.MulterError) {
+      //     console.log(err);
+      //     return res.status(500).send(err);
+      //   } else if (err) {
+      //     console.log(err);
+      //     return res.status(500).send(err);
+      //   }
 
-        if (!req.file) {
-          return res.status(400).send("Please upload an image file");
-        }
+      //   if (!req.file) {
+      //     return res.status(400).send("Please upload an image file");
+      //   }
 
-        const imageUrl = await uploadImageToFirebase(req.file);
+      // const imageUrl = await uploadImageToFirebase(req.file);
 
-        const trainer = new Trainer({
-          image: imageUrl,
-          name: req.body.name,
-          email: req.body.email,
-          phone: req.body.phone,
-          experience_year: req.body.experience_year,
-          about: req.body.about,
-          location: req.body.location,
-          experties: req.body.experties,
-          bank_name: req.body.bank_name,
-          account_holder_name: req.body.account_holder_name,
-          account_no: req.body.account_no,
-          ifsc_code: req.body.ifsc_code,
-          branch: req.body.branch,
-          upi: req.body.upi,
-          category: req.body.category ? req.body.category : "Not Found",
-          people_trained: req.body.people_trained,
-          rating: req.body.rating,
-          website_desc: req.body.website_desc,
-        });
-
-        await trainer.save();
-        return res.send({
-          error: false,
-          message: " Trainer added successfully",
-        });
+      const trainer = new Trainer({
+        // image: imageUrl,
+        name: req.body.name,
+        email: req.body.email,
+        phone: req.body.phone,
+        experience_year: req.body.experience_year,
+        about: req.body.about,
+        location: req.body.location,
+        experties: req.body.experties,
+        bank_name: req.body.bank_name,
+        account_holder_name: req.body.account_holder_name,
+        account_no: req.body.account_no,
+        ifsc_code: req.body.ifsc_code,
+        branch: req.body.branch,
+        upi: req.body.upi,
+        category: req.body.category ? req.body.category : "Not Found",
+        people_trained: req.body.people_trained,
+        rating: req.body.rating,
+        website_desc: req.body.website_desc,
       });
+      const client = require("twilio")(accountSid, authToken);
+      client.verify.v2
+        .services(verifySid)
+        .verifications.create({ to: req.body.phone, channel: "sms" })
+        .then((verification) => console.log(verification.status))
+        .then(() => {
+          const readline = require("readline").createInterface({
+            input: process.stdin,
+            output: process.stdout,
+          });
+          readline.question("Please enter the OTP:", (otpCode) => {
+            client.verify.v2
+              .services(verifySid)
+              .verificationChecks.create({
+                to: req.body.phone,
+                code: otpCode,
+              })
+              .then(async (verification_check) => {
+                console.log(verification_check.status);
+                if (verification_check.status == "pending") {
+                  console.log("Invalid OTP");
+                } else {
+                  await trainer.save();
+                  return res.send({
+                    error: false,
+                    message: " Trainer added successfully",
+                  });
+                }
+              })
+              .then(() => readline.close());
+          });
+        });
+      // });
     } catch (err) {
       console.log(err);
       return res
@@ -179,6 +207,7 @@ class TrainerController {
           _id: req.body.editid,
         },
         {
+          category: req.body.category,
           name: req.body.edit_name,
           email: req.body.edit_email,
           phone: req.body.edit_phone,
@@ -204,7 +233,9 @@ class TrainerController {
       });
     } catch (error) {
       console.log(error);
-      return res.status(500).send("Something went wrong please try again later");
+      return res
+        .status(500)
+        .send("Something went wrong please try again later");
     }
   };
 

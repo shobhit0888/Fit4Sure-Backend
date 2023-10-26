@@ -1,13 +1,11 @@
 const mongoose = require("mongoose");
 
 const TrainerSchema = new mongoose.Schema({
-  category: [
+  category: 
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
+      type: String,
       required: true,
     },
-  ],
   name: {
     type: String,
   },
@@ -23,9 +21,18 @@ const TrainerSchema = new mongoose.Schema({
   about: {
     type: String,
   },
+  language: {
+    type: String,
+  },
   location: {
     type: String,
   },
+  clients: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   experties: {
     type: String,
   },
@@ -58,18 +65,21 @@ const TrainerSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  people_trained:{
+  people_trained: {
     type: Number,
   },
-  rating:{
+  rating: {
     type: Number,
   },
-  website_desc:{
+  website_desc: {
     type: String,
   },
   created_at: {
     type: String,
     default: new Date().toLocaleDateString(),
+  },
+  otp: {
+    type: Number,
   },
   updated_at: {
     type: String,

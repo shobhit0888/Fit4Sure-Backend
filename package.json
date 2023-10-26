@@ -4,8 +4,8 @@
   "description": "��#\u0000 \u0000f\u0000i\u0000t\u00004\u0000s\u0000u\u0000r\u0000e\u0000_\u0000b\u0000a\u0000c\u0000k\u0000e\u0000n\u0000d\u0000\r\u0000 \u0000",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index"
+    "start": "nodemon index",
+    "dev": "nodemon app"
   },
   "author": "dhruv",
   "license": "ISC",
@@ -45,7 +45,7 @@
     "twilio": "^4.19.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.22"
   },
   "keywords": []
 }

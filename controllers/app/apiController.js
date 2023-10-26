@@ -1,4 +1,6 @@
 const Banner = require("../../models/Banner");
+const Trackhealth = require("../../models/trackhealth");
+const Trainer = require("../../models/Trainer");
 const About = require("../../models/About");
 const Contact = require("../../models/Contact");
 const Faq = require("../../models/Faq");
@@ -682,37 +684,122 @@ class ApiController {
         .send("Something went wrong please try again later");
     }
   };
-  static calculate_basal_metabolic_rate = async (req, res) => {
+  static findTrainer = async (req, res) => {
     try {
-      const data = req.body;
-      if (!data.gender) {
-        return res.status(400).send({
-          status: 400,
-          key: "gender",
-          message: "gender is required",
-        });
-      }
-      if (!data.age) {
-        return res.status(400).send({
-          status: 400,
-          key: "age",
-          message: "age is required",
-        });
-      }
-      if (!data.height) {
-        return res.status(400).send({
-          status: 400,
-          key: "height",
-          message: "height is required(in FEETS or CENTIMETERS)",
-        });
-      }
-      if (!data.weight) {
-        return res.status(400).send({
-          status: 400,
-          key: "weight",
-          message: "weight is required(in POUNDS or KILOGRAMS)",
-        });
-      }
+      const gender = req.body.gender;
+      const language = req.body.language;
+      const category = req.body.category;
+
+      const found = await Trainer.find({
+        $and: [
+          { gender: gender },
+          { language: language },
+          { category: category },
+        ],
+      });
+
+      return res.json({
+        message: "client added to the Trainer successfully",
+        success: true,
+        data: found,
+      });
+    } catch (err) {
+      console.log(error);
+      return res
+        .status(500)
+        .send("Something went wrong please try again later");
+    }
+  };
+
+  static selectTrainer = async (req, res) => {
+    try {
+      const trainerId = req.body.trainerId;
+      const clientId = req.userId;
+      console.log(req.userId);
+      const addclient = Trainer.findOneAndUpdate(
+        { _id: trainerId },
+        { $addToSet: { clients: clientId } }, // Use $addToSet to ensure unique client IDs
+        { new: true }
+      );
+
+      const addTrainer = User.findOneAndUpdate(
+        { _id: clientId },
+        { $addToSet: { Trainers: trainerId } },
+        { new: true }
+      );
+      return res.json({
+        message: "client added to the Trainer successfully",
+        success: true,
+        data: addclient,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .send("Something went wrong please try again later");
+    }
+  };
+
+  static health_info = async (req, res) => {
+    try {
+      const info = Trackhealth({
+        User: req.userId,
+        height: req.body.height,
+        weight: req.body.weight,
+        age: req.body.age,
+        activity_level: req.body.activity_level,
+        goal: req.body.goal,
+        approach: req.body.approach,
+        hip: req.body.hip,
+        waist: req.body.waist,
+        gender: req.body.gender,
+      });
+      console.log(req.userId);
+      const saveData = await info.save();
+      return res.json({
+        message: "health_info added successfully",
+        success: true,
+        data: saveData,
+      });
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .send("Something went wrong please try again later");
+    }
+  };
+  static calculate_basal_metabolic_rate = async (req, res) => {
+    const id = req.userId;
+    try {
+      const data = await Trackhealth.findOne({ User: id });
+      // if (!data.gender) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "gender",
+      //     message: "gender is required",
+      //   });
+      // }
+      // if (!data.age) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "age",
+      //     message: "age is required",
+      //   });
+      // }
+      // if (!data.height) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "height",
+      //     message: "height is required(in FEETS or CENTIMETERS)",
+      //   });
+      // }
+      // if (!data.weight) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "weight",
+      //     message: "weight is required(in POUNDS or KILOGRAMS)",
+      //   });
+      // }
       let myBmr = await calculate.bmr(
         data.gender,
         Number(data.age),
@@ -730,42 +817,9 @@ class ApiController {
   };
   static calculate_total_daily_energy_expenditure = async (req, res) => {
     try {
-      const data = req.body;
-      if (!data.gender) {
-        return res.status(400).send({
-          status: 400,
-          key: "gender",
-          message: "gender is required",
-        });
-      }
-      if (!data.age) {
-        return res.status(400).send({
-          status: 400,
-          key: "age",
-          message: "age is required",
-        });
-      }
-      if (!data.height) {
-        return res.status(400).send({
-          status: 400,
-          key: "height",
-          message: "height is required(in FEETS or CENTIMETERS)",
-        });
-      }
-      if (!data.weight) {
-        return res.status(400).send({
-          status: 400,
-          key: "weight",
-          message: "weight is required(in POUNDS or KILOGRAMS)",
-        });
-      }
-      if (!data.activity_level) {
-        return res.status(400).send({
-          status: 400,
-          key: "activity_level",
-          message: "activity_level is required",
-        });
-      }
+      const id = req.userId;
+      const data = await Trackhealth.findOne({ User: id });
+
       let myBmr = await calculate.tdee(
         data.gender,
         Number(data.age),
@@ -784,56 +838,56 @@ class ApiController {
   };
   static calculate_total_daily_caloric_needs = async (req, res) => {
     try {
-      const data = req.body;
-      if (!data.gender) {
-        return res.status(400).send({
-          status: 400,
-          key: "gender",
-          message: "gender is required",
-        });
-      }
-      if (!data.age) {
-        return res.status(400).send({
-          status: 400,
-          key: "age",
-          message: "age is required",
-        });
-      }
-      if (!data.height) {
-        return res.status(400).send({
-          status: 400,
-          key: "height",
-          message: "height is required(in FEETS or CENTIMETERS)",
-        });
-      }
-      if (!data.weight) {
-        return res.status(400).send({
-          status: 400,
-          key: "weight",
-          message: "weight is required(in POUNDS or KILOGRAMS)",
-        });
-      }
-      if (!data.activity_level) {
-        return res.status(400).send({
-          status: 400,
-          key: "activity_level",
-          message: "activity_level is required",
-        });
-      }
-      if (!data.goal) {
-        return res.status(400).send({
-          status: 400,
-          key: "goal",
-          message: "goal is required",
-        });
-      }
-      if (!data.approach) {
-        return res.status(400).send({
-          status: 400,
-          key: "approach",
-          message: "approach is required",
-        });
-      }
+      const id = req.userId;
+      const data = await Trackhealth.findOne({ User: id }); // if (!data.gender) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "gender",
+      //     message: "gender is required",
+      //   });
+      // }
+      // if (!data.age) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "age",
+      //     message: "age is required",
+      //   });
+      // }
+      // if (!data.height) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "height",
+      //     message: "height is required(in FEETS or CENTIMETERS)",
+      //   });
+      // }
+      // if (!data.weight) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "weight",
+      //     message: "weight is required(in POUNDS or KILOGRAMS)",
+      //   });
+      // }
+      // if (!data.activity_level) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "activity_level",
+      //     message: "activity_level is required",
+      //   });
+      // }
+      // if (!data.goal) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "goal",
+      //     message: "goal is required",
+      //   });
+      // }
+      // if (!data.approach) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "approach",
+      //     message: "approach is required",
+      //   });
+      // }
       let myBmr = await calculate.caloricNeeds(
         data.gender,
         Number(data.age),
@@ -854,27 +908,29 @@ class ApiController {
   };
   static calculate_ideal_weight = async (req, res) => {
     try {
-      const data = req.body;
-      if (!data.gender) {
-        return res.status(400).send({
-          status: 400,
-          key: "gender",
-          message: "gender is required",
-        });
-      }
-      if (!data.height) {
-        return res.status(400).send({
-          status: 400,
-          key: "height",
-          message: "height is required(in FEETS or CENTIMETERS)",
-        });
-      }
+      const id = req.userId;
+      const data = await Trackhealth.findOne({ User: id });
+      // console.log(req.userId);
+      // if (!data.gender) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "gender",
+      //     message: "gender is required",
+      //   });
+      // }
+      // if (!data.height) {
+      //   return res.status(400).send({
+      //     status: 400,
+      //     key: "height",
+      //     message: "height is required(in FEETS or CENTIMETERS)",
+      //   });
+      // }
 
       let myBmr = await calculate.idealBodyWeight(
         Number(data.height),
         data.gender
       );
-
+      
       return res.send({ result: myBmr, value: "ideal weight" });
     } catch (error) {
       console.log(error);

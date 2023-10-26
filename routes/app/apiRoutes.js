@@ -25,6 +25,10 @@ router.post(
   ApiController.shortvideo_likes
 );
 router.get("/saved_videos/list", auth, ApiController.saved_videos);
+router.post("/selectTrainer", auth, ApiController.selectTrainer);
+router.post("/health_info", auth, ApiController.health_info);
+router.post("/findTrainer", auth, ApiController.findTrainer);
+
 router.post(
   "/calculate_basal_metabolic_rate",
   auth,
@@ -51,6 +55,7 @@ router.get(
   ApiController.get_activity_level_dropdown
 );
 router.get("/get_goal_dropdown", auth, ApiController.get_goal_dropdown);
+
 router.get(
   "/get_approach_dropdown",
   auth,
