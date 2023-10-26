@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { auth } = require("../../middlewares/Appauth");
 const AuthController = require("../../controllers/app/authController");
 
-router.post("/login", AuthController.login);
+router.post("/user/login", AuthController.login);
 // router.post("/otp-verify", AuthController.otp_verify);
 router.post("/register", AuthController.register);
 router.post("/profile-update", AuthController.editProfile);
@@ -10,6 +10,7 @@ router.post("/get_user_profile", AuthController.get_user_profile);
 router.post("/coupon-verify", auth, AuthController.coupon_verify);
 // router.post("/trainer_signin", AuthController.trainer_signin);
 router.post("/findmycoach", AuthController.findmycoach);
+router.post("/sendOTP", AuthController.sendOTP);
 
 router.post("/signin", AuthController.signin);
 router.post("/signup", AuthController.signup);

@@ -15,10 +15,11 @@ const path = require("path");
 const fs = require("fs");
 const sendEmail = require("../../config/mailer");
 const bcrpyt = require("bcrypt");
-
+const twilioPhoneNumber = "+16508177578";
 const accountSid = "ACcd02be05ad3b49e27407ac84a181c97e";
 const authToken = "37419abc85f88c70d6a805054cfb4d7c";
 const verifySid = "VA1de4dc8a0847b6b5a90cd114612f743e";
+const otpStorage = {};
 // Set The Storage Engine
 // const storage = multer.diskStorage({
 //   destination: path.join(root, "/public/uploads/profile"),
@@ -458,74 +459,166 @@ class AuthController {
   //     return res.status(401).send(msg);
   //   }
   // };
-
-  static login = async (req, res) => {
+  static sendOTP = async (req, res) => {
     const mobile_number = req.body.contactNumber;
-    console.log(mobile_number);
-    let msg = "Something went wrong please try again later";
-    //  var mobile_regex = /^\d{10}$/;
-    //  if (!mobile_regex.test(mobile_number)) {
-    //    return res.status(401).send("Invalid Mobile Number");
-    //  }
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    //   const otpStorage = {};
+    otpStorage[mobile_number] = otp;
+    console.log(otpStorage[mobile_number]);
     try {
-      let user = await User.findOne({ contactNumber: mobile_number });
-      if (user == null || user.contactNumber == null) {
-        console.log("register yourself");
-      }
-      // if (user.contactNumber == null) {
-      //   res.send("update yourself");
-      // }
-
       const client = require("twilio")(accountSid, authToken);
-
-      client.verify.v2
-        .services(verifySid)
-        .verifications.create({ to: user.contactNumber, channel: "sms" })
-        .then((verification) => console.log(verification.status))
+      client.messages
+        .create({
+          body: `Your OTP is: ${otp}`,
+          from: twilioPhoneNumber,
+          to: mobile_number,
+        })
         .then(() => {
-          const readline = require("readline").createInterface({
-            input: process.stdin,
-            output: process.stdout,
-          });
-          readline.question("Please enter the OTP:", (otpCode) => {
-            client.verify.v2
-              .services(verifySid)
-              .verificationChecks.create({
-                to: user.contactNumber,
-                code: otpCode,
-              })
-              .then((verification_check) => {
-                console.log(verification_check.status);
-                if (verification_check.status == "pending") {
-                  console.log("Invalid OTP");
-                } else {
-                  const expiresIn = Math.floor(Date.now() / 1000) + 315360000;
-                  const token = jwt.sign(
-                    {
-                      id: user._id,
-                      contactNumber: mobile_number,
-                    },
-                    process.env.TOKEN_SECRET,
-                    { expiresIn } // Set expiresIn to a string like 'never'
-                  );
-                  const options = {
-                    expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-                    httpOnly: true,
-                  };
-                  //save in cookie
-                  res.status(200).cookie("token", token, options).json({
-                    result: user,
-                  });
-                }
-              })
-              .then(() => readline.close());
-          });
+          res.json({success:true}).send("OTP sent successfully.");
         });
     } catch (err) {
       console.log(err);
-      res.send(err);
+      return res.send(err);
     }
   };
+
+  static login = async (req, res) => {
+    const mobile_number = req.body.contactNumber;
+    const otp = req.body.otp;
+
+    try {
+      const user = await User.findOne({ contactNumber: mobile_number });
+      if (user == null) {
+        console.log("register yourself");
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if (otpStorage[mobile_number] !== otp) {
+        console.log("dada2");
+        return res.status(401).json({ message: "Invalid OTP" });
+      }
+
+      const expiresIn = Math.floor(Date.now() / 1000) + 315360000;
+      const token = jwt.sign(
+        {
+          id: user._id,
+          contactNumber: mobile_number,
+        },
+        process.env.TOKEN_SECRET,
+        { expiresIn }
+      );
+
+      const options = {
+        expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+      };
+
+      res.status(200).cookie("token", token, options).json({
+        result: user,
+        token,
+      });
+      console.log("ho gya bhai");
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  };
+
+  // static login = async (req, res) => {
+  //   const mobile_number = req.body.contactNumber;
+  //   console.log(mobile_number);
+  //   let msg = "Something went wrong please try again later";
+  //   const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  //   const otpStorage = {};
+  //   otpStorage[mobile_number] = otp;
+  //   //  }
+  //   try {
+  // let user = await User.findOne({ contactNumber: mobile_number });
+  // if (user == null) {
+  //   console.log("register yourself");
+  // }
+  // // if (user.contactNumber == null) {
+  // //   res.send("update yourself");
+  // // }
+  //     const client = require("twilio")(accountSid, authToken);
+  //     client.messages
+  //       .create({
+  //         body: `Your OTP is: ${otp}`,
+  //         from: twilioPhoneNumber,
+  //         to: mobile_Number,
+  //       })
+  //       .then(() => {
+  //         res.send("OTP sent successfully.");
+  //       });
+
+  //     if (req.body.otp === otpStorage[mobile_number]) {
+  //       const expiresIn = Math.floor(Date.now() / 1000) + 315360000;
+  //       const token = jwt.sign(
+  //         {
+  //           id: user._id,
+  //           contactNumber: mobile_number,
+  //         },
+  //         process.env.TOKEN_SECRET,
+  //         { expiresIn } // Set expiresIn to a string like 'never'
+  //       );
+  //       const options = {
+  //         expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+  //         httpOnly: true,
+  //       };
+  //       //save in cookie
+  //       res.status(200).cookie("token", token, options).json({
+  //         result: user,
+  //       });
+  //     }
+
+  // client.verify.v2
+  //   .services(verifySid)
+  //   .verifications.create({ to: user.contactNumber, channel: "sms" })
+  //   .then((verification) => console.log(verification.status))
+  //   .then(() => {
+  //     const readline = require("readline").createInterface({
+  //       input: process.stdin,
+  //       output: process.stdout,
+  //     });
+  // readline.question("Please enter the OTP:", (otpCode) => {
+  //   client.verify.v2
+  //     .services(verifySid)
+  //     .verificationChecks.create({
+  //       to: user.contactNumber,
+  //       code: otpCode,
+  //     })
+  //         .then((verification_check) => {
+  //           console.log(verification_check.status);
+  //           if (verification_check.status == "pending") {
+  //             console.log("Invalid OTP");
+  //           } else {
+  //             const expiresIn = Math.floor(Date.now() / 1000) + 315360000;
+  //             const token = jwt.sign(
+  //               {
+  //                 id: user._id,
+  //                 contactNumber: mobile_number,
+  //               },
+  //               process.env.TOKEN_SECRET,
+  //               { expiresIn } // Set expiresIn to a string like 'never'
+  //             );
+  //             const options = {
+  //               expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+  //               httpOnly: true,
+  //             };
+  //             //save in cookie
+  //             res.status(200).cookie("token", token, options).json({
+  //               result: user,
+  //             });
+  //           }
+  //         })
+  //         .then(() => readline.close());
+  //     });
+  //   });
+  //   } catch (err) {
+  //     console.log(err);
+  //     res.send(err);
+  //   }
+  // };
 
   // static otp_verify = async (req, res) => {
   //   let msg = "Something went wrong please try again later";
