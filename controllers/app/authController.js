@@ -135,8 +135,8 @@ class AuthController {
     console.log(req.body);
     const {
       email,
-      password,
-      confirmPassword,
+      // password,
+      // confirmPassword,
       firstName,
       lastName,
       contactNumber,
@@ -152,15 +152,15 @@ class AuthController {
         return res
           .status(400)
           .json({ message: "Contact number already exists" });
-      if (password !== confirmPassword)
-        return res.status(400).json({ message: "Passwords don't match" });
+      // if (password !== confirmPassword)
+      //   return res.status(400).json({ message: "Passwords don't match" });
 
-      const hashedPassword = await bcrpyt.hash(password, 12);
+      // const hashedPassword = await bcrpyt.hash(password, 12);
 
       const result = await User.create({
         email,
         contactNumber,
-        password: hashedPassword,
+        // password: hashedPassword,
         name: `${firstName} ${lastName}`,
       });
 
@@ -179,7 +179,7 @@ class AuthController {
       };
       //save in cookie
       res.status(200).cookie("token", token, options).json({
-        result,
+        result, token
       });
     } catch (error) {
       res.status(500).json({ message: "Something went wrong" });
