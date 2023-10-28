@@ -182,21 +182,22 @@ class TrainerController {
   static trainerList = async (req, res) => {
     try {
       const trainer = await Trainer.find();
-      const admin = await Adminauth.find({});
-      const TrainersWithImageURLs = await Promise.all(
-        trainer.map(async (trainer) => {
-          const file = storage.bucket().file(trainer.image);
-          const [signedUrl] = await file.getSignedUrl({
-            action: "read",
-            expires: "03-01-2500",
-          });
-          return { ...trainer.toObject(), image: signedUrl };
-        })
-      );
-      return res.render("admin/trainer-list", {
-        trainer: TrainersWithImageURLs,
-        admin,
-      });
+      // const admin = await Adminauth.find({});
+      // const TrainersWithImageURLs = await Promise.all(
+      //   trainer.map(async (trainer) => {
+      //     const file = storage.bucket().file(trainer.image);
+      //     const [signedUrl] = await file.getSignedUrl({
+      //       action: "read",
+      //       expires: "03-01-2500",
+      //     });
+      //     return { ...trainer.toObject(), image: signedUrl };
+      //   })
+      // );
+      res.json({success:true, trainer})
+      // return res.render("admin/trainer-list", {
+      //   trainer: TrainersWithImageURLs,
+      //   admin,
+      // });
     } catch (error) {
       console.log(error);
       return res.send("Something went wrong please try again later");
