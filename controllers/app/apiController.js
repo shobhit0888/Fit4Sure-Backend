@@ -699,7 +699,7 @@ class ApiController {
       });
 
       return res.json({
-        message: "client added to the Trainer successfully",
+        message: "data displayed successfully",
         success: true,
         data: found,
       });
@@ -722,16 +722,18 @@ class ApiController {
         { new: true }
       );
 
-      const addTrainer = User.findOneAndUpdate(
-        { _id: clientId },
-        { $addToSet: { Trainers: trainerId } },
-        { new: true }
-      );
+      // const addTrainer = User.findOneAndUpdate(
+      //   { _id: clientId },
+      //   { $addToSet: { Trainers: trainerId } },
+      //   { new: true }
+      // );
+
       return res.json({
-        message: "client added to the Trainer successfully",
+        message: "data displayed successfully",
         success: true,
         data: addclient,
       });
+
     } catch (error) {
       console.log(error);
       return res

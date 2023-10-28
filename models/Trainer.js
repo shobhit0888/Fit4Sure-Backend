@@ -9,6 +9,9 @@ const TrainerSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  gender:{
+    type: String,
+  },
   email: {
     type: String,
   },

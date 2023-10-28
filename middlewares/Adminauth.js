@@ -1,11 +1,12 @@
 const Adminauth = require("../models/Adminauth");
-
+const session = require("express-session")
 const LoggedIn = async (req, res, next) => {};
 
 const NotLoggedIn = async (req, res, next) => {
   req.session.path = req.originalUrl;
   const username = req.session.username;
   const password = req.session.password;
+
   if (!username || !password) return res.redirect("/admin/login");
   const user = await Adminauth.findOne({
     username: username,

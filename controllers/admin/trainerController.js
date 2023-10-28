@@ -8,6 +8,9 @@ const firebaseApp = require("../../firebase");
 const accountSid = "ACcd02be05ad3b49e27407ac84a181c97e";
 const authToken = "37419abc85f88c70d6a805054cfb4d7c";
 const verifySid = "VA1de4dc8a0847b6b5a90cd114612f743e";
+const twilioPhoneNumber = "+16508177578";
+const otpStorage = {}
+
 const storage = firebaseApp.storage();
 
 const bucket = firebaseApp.storage().bucket();
@@ -69,16 +72,10 @@ class TrainerController {
   };
 
   static add = async (req, res) => {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    otpStorage[req.body.phone] = otp;
+    console.log(otp);
     try {
-      // upload(req, res, async function (err) {
-      //   if (err instanceof multer.MulterError) {
-      //     console.log(err);
-      //     return res.status(500).send(err);
-      //   } else if (err) {
-      //     console.log(err);
-      //     return res.status(500).send(err);
-      //   }
-
       //   if (!req.file) {
       //     return res.status(400).send("Please upload an image file");
       //   }
@@ -89,6 +86,7 @@ class TrainerController {
         // image: imageUrl,
         name: req.body.name,
         email: req.body.email,
+        gender: req.body.gender,
         phone: req.body.phone,
         experience_year: req.body.experience_year,
         about: req.body.about,
@@ -100,42 +98,35 @@ class TrainerController {
         ifsc_code: req.body.ifsc_code,
         branch: req.body.branch,
         upi: req.body.upi,
-        category: req.body.category ? req.body.category : "Not Found",
+        language: req.body.language,
+        category: req.body.category,
         people_trained: req.body.people_trained,
         rating: req.body.rating,
         website_desc: req.body.website_desc,
       });
+      const email = req.body.email;
+      const phone = req.body.phone;
+      const existingUser = await Trainer.findOne({ email: email });
+      const existingno = await Trainer.findOne({ phone: phone });
+      if (existingUser)
+        return res.status(400).json({ message: "User already exists" });
+      if (existingno)
+        return res
+          .status(400)
+          .json({ message: "Contact number already exists" });
+
+      const newTrainer = new Trainer(trainer);
+      const savedTrainer = await newTrainer.save();
+
       const client = require("twilio")(accountSid, authToken);
-      client.verify.v2
-        .services(verifySid)
-        .verifications.create({ to: req.body.phone, channel: "sms" })
-        .then((verification) => console.log(verification.status))
+      client.messages
+        .create({
+          body: `Your OTP is: ${otp}`,
+          from: twilioPhoneNumber,
+          to: phone,
+        })
         .then(() => {
-          const readline = require("readline").createInterface({
-            input: process.stdin,
-            output: process.stdout,
-          });
-          readline.question("Please enter the OTP:", (otpCode) => {
-            client.verify.v2
-              .services(verifySid)
-              .verificationChecks.create({
-                to: req.body.phone,
-                code: otpCode,
-              })
-              .then(async (verification_check) => {
-                console.log(verification_check.status);
-                if (verification_check.status == "pending") {
-                  console.log("Invalid OTP");
-                } else {
-                  await trainer.save();
-                  return res.send({
-                    error: false,
-                    message: " Trainer added successfully",
-                  });
-                }
-              })
-              .then(() => readline.close());
-          });
+          res.json({ success: true });
         });
       // });
     } catch (err) {
@@ -143,6 +134,48 @@ class TrainerController {
       return res
         .status(500)
         .send("Something went wrong please try again later");
+    }
+  };
+
+  static trainerlogin = async (req, res) => {
+    const mobile_number = req.body.phone;
+    const otp = req.body.otp;
+
+    try {
+      const user = await Trainer.findOne({ phone: mobile_number });
+      if (user == null) {
+        console.log("register yourself");
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      if (otpStorage[mobile_number] !== otp) {
+        console.log("Invlid OTP");
+        return res.status(401).json({ message: "Invalid OTP" });
+      }
+
+      const expiresIn = Math.floor(Date.now() / 1000) + 315360000;
+      const token = jwt.sign(
+        {
+          id: user._id,
+          phone: mobile_number,
+        },
+        process.env.TOKEN_SECRET,
+        { expiresIn }
+      );
+
+      const options = {
+        expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+        httpOnly: true,
+      };
+
+      res.status(200).cookie("token", token, options).json({
+        result: user,
+        token,
+      });
+      console.log("ho gya bhai");
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ message: "Internal server error" });
     }
   };
 

@@ -12,7 +12,7 @@ router.post("/coupon-verify", auth, AuthController.coupon_verify);
 router.post("/findmycoach", AuthController.findmycoach);
 router.post("/sendOTP", AuthController.sendOTP);
 
-router.post("/signin", AuthController.signin);
+// router.post("/signin", AuthController.signin);
 router.post("/signup", AuthController.signup);
 router.post("/google_auth", AuthController.googleAuthCallback);
 router.get("/user-profile", auth, AuthController.userProfile);

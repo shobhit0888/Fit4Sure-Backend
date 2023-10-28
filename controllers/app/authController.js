@@ -102,34 +102,34 @@ class AuthController {
       res.status(500).json({ message: "Something went wrong" });
     }
   };
-  static signin = async (req, res) => {
-    const { email, password } = req.body;
+  // static signin = async (req, res) => {
+  //   const { email, password } = req.body;
 
-    try {
-      const existingUser = await User.findOne({ email });
+  //   try {
+  //     const existingUser = await User.findOne({ email });
 
-      if (!existingUser)
-        return res.status(404).json({ message: "User does not exist" });
+  //     if (!existingUser)
+  //       return res.status(404).json({ message: "User does not exist" });
 
-      const isPasswordCorrect = await bcrpyt.compare(
-        password,
-        existingUser.password
-      );
+  //     const isPasswordCorrect = await bcrpyt.compare(
+  //       password,
+  //       existingUser.password
+  //     );
 
-      if (!isPasswordCorrect)
-        return res.status(400).json({ message: "Invalid credentials" });
+  //     if (!isPasswordCorrect)
+  //       return res.status(400).json({ message: "Invalid credentials" });
 
-      const token = jwt.sign(
-        { email: existingUser.email, id: existingUser._id },
-        process.env.TOKEN_SECRET,
-        { expiresIn: "1h" }
-      );
+  //     const token = jwt.sign(
+  //       { email: existingUser.email, id: existingUser._id },
+  //       process.env.TOKEN_SECRET,
+  //       { expiresIn: "1h" }
+  //     );
 
-      res.status(200).json({ result: existingUser, token });
-    } catch (error) {
-      res.status(500).json({ message: "Something went wrong" });
-    }
-  };
+  //     res.status(200).json({ result: existingUser, token });
+  //   } catch (error) {
+  //     res.status(500).json({ message: "Something went wrong" });
+  //   }
+  // };
 
   static signup = async (req, res) => {
     console.log(req.body);
@@ -157,7 +157,7 @@ class AuthController {
 
       // const hashedPassword = await bcrpyt.hash(password, 12);
 
-      const result = await User.create({
+      const user = await User.create({
         email,
         contactNumber,
         // password: hashedPassword,
@@ -178,9 +178,7 @@ class AuthController {
         httpOnly: true,
       };
       //save in cookie
-      res.status(200).cookie("token", token, options).json({
-        result, token
-      });
+      res.status(200).cookie("token", token, options).json({ result: user, token});
     } catch (error) {
       res.status(500).json({ message: "Something went wrong" });
     }
@@ -464,7 +462,7 @@ class AuthController {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     //   const otpStorage = {};
     otpStorage[mobile_number] = otp;
-    console.log(otpStorage[mobile_number]);
+    console.log(otp);
     try {
       const client = require("twilio")(accountSid, authToken);
       client.messages
@@ -474,7 +472,7 @@ class AuthController {
           to: mobile_number,
         })
         .then(() => {
-          res.json({success:true}).send("OTP sent successfully.");
+          res.json({success:true});
         });
     } catch (err) {
       console.log(err);
