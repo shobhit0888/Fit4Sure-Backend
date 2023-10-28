@@ -26,6 +26,7 @@ const Support = require("../../models/Support");
 const Notification = require("../../models/Notification");
 const Saved = require("../../models/Saved");
 const calculate = require("fitness-health-calculations");
+const { trainerlogin } = require("../admin/trainerController");
 const baseurl = process.env.URL;
 var ObjectId = require("mongodb").ObjectID;
 
@@ -714,26 +715,29 @@ class ApiController {
   static selectTrainer = async (req, res) => {
     try {
       const trainerId = req.body.trainerId;
+      console.log(trainerId);
       const clientId = req.userId;
-      console.log(req.userId);
-      const addclient = Trainer.findOneAndUpdate(
+      console.log(clientId);
+      const addclient = await Trainer.findOneAndUpdate(
         { _id: trainerId },
         { $addToSet: { clients: clientId } }, // Use $addToSet to ensure unique client IDs
         { new: true }
       );
+      console.log(addclient)
+      
 
-      // const addTrainer = User.findOneAndUpdate(
-      //   { _id: clientId },
-      //   { $addToSet: { Trainers: trainerId } },
-      //   { new: true }
-      // );
+      const addTrainer = await User.findOneAndUpdate(
+        { _id: clientId },
+        { $addToSet: { Trainers: trainerId } },
+        { new: true }
+      );
+      console.log(addTrainer)
 
-      return res.json({
+      res.json({
         message: "data displayed successfully",
         success: true,
         data: addclient,
       });
-
     } catch (error) {
       console.log(error);
       return res
