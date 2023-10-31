@@ -685,6 +685,7 @@ class ApiController {
         .send("Something went wrong please try again later");
     }
   };
+  
   static findTrainer = async (req, res) => {
     try {
       const gender = req.body.gender;

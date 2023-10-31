@@ -78,13 +78,16 @@ class ShortvideoController {
       upload(req, res, async (err) => {
 
         if (err) {
+          console.log(err)
           return res.status(400).send({
             error: true,
-            message: err.message,
+            message: err,
+            
           });
         }
         const { title } = req.body;
         const video = await uploadVideoToFirebase(req.file);
+
         const shortVideo = await ShortVideo.create({
           title,
           video,

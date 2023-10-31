@@ -25,6 +25,7 @@ class BannerController {
   };
 
   static add = async (req, res) => {
+    console.log(req.file)
     try {
       upload(req, res, async function (err) {
         if (req.fileValidationError) {
