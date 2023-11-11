@@ -1,63 +1,58 @@
-// const accountSid = "ACcd02be05ad3b49e27407ac84a181c97e";
-// const authToken = "37419abc85f88c70d6a805054cfb4d7c";
-// const verifySid = "VA1de4dc8a0847b6b5a90cd114612f743e";
-// const client = require("twilio")(accountSid, authToken);
-// const twilioPhoneNumber = '+16508177578';
-// // Generate a random 6-digit OTP
-// function generateOTP() {
-//   return Math.floor(100000 + Math.random() * 900000).toString();
-// }
+const express = require("express");
+const admin = require("firebase-admin");
+const multer = require("multer");
+const serviceAccount = require("./fit4sure-a1bf3-firebase-adminsdk-paul1-82c4340ab6.json");
 
-// const otpStorage = {};
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  storageBucket: "fit4sure-a1bf3.appspot.com",
+});
 
+const bucket = admin.storage().bucket();
 
-// static SendOTP = async(req, res) => {
-//   const { mobileNumber } = req.body;
-//   const otp = generateOTP();
-//   otpStorage[mobileNumber] = otp;
+const app = express();
+const port = 3000;
 
-//    client.messages
-//     .create({
-//       body: `Your OTP is: ${otp}`,
-//       from: twilioPhoneNumber,
-//       to: mobileNumber,
-//     })
-//     .then(() => {
-//       res.send('OTP sent successfully.');
-//     })
-//     .catch((err) => {
-//       console.error(err);
-//       res.status(500).send('Failed to send OTP.');
-//     });
-// }
+// Configure multer for handling file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
-// static verifyOTP = async(req, res) => {
-//   const { mobileNumber, otp } = req.body;
+app.post("/upload", upload.single("video"), async (req, res) => {
+  try {
+    const file = req.file;
 
-//   // Check if the OTP exists for the given mobile number
-//   if (otpStorage[mobileNumber] === otp) {
-//     res.send('OTP is valid.');
-//     delete otpStorage[mobileNumber]; // Remove the used OTP from storage
-//   } else {
-//     res.status(400).send('Invalid OTP.');
-//   }
-// }
+    if (!file) {
+      return res.status(400).send("No file uploaded.");
+    }
 
-// // client.verify.v2
-// //   .services(verifySid)
-// //   .verifications.create({ to: "+916265401088", channel: "sms" })
-// //   .then((verification) => console.log(verification.status))
-// //   .then(() => {
-// //     const readline = require("readline").createInterface({
-// //       input: process.stdin,
-// //       output: process.stdout,
-// //     });
-// //     readline.question("Please enter the OTP:", (otpCode) => {
-// //       client.verify.v2
-// //         .services(verifySid)
-// //         .verificationChecks.create({ to: "+916265401088", code: otpCode })
-// //         .then((verification_check) => console.log(verification_check.status))
-// //         .then(() => readline.close());
-// //     });
-// //   });
-// // // E:\fit4sure_backend-main\temp.js
+    const fileName = Date.now() + "-" + file.originalname;
+    const fileUpload = bucket.file(fileName);
+
+    const blobStream = fileUpload.createWriteStream({
+      metadata: {
+        contentType: file.mimetype,
+      },
+    });
+
+    blobStream.on("error", (error) => {
+      console.error(error);
+      res.status(500).send("Error uploading file.");
+    });
+
+    blobStream.on("finish", () => {
+      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+      res
+        .status(200)
+        .send(`File uploaded successfully. Public URL: ${publicUrl}`);
+    });
+
+    blobStream.end(file.buffer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
