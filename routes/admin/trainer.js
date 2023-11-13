@@ -5,6 +5,7 @@ const TrainerController = require("../../controllers/admin/trainerController");
 router.get("/add", NotLoggedIn, TrainerController.addGet);
 router.post("/add", TrainerController.add);
 router.post("/trainerlogin", TrainerController.trainerlogin);
+router.post("/genOTP", NotLoggedIn, TrainerController.genOTP);
 router.get("/list", TrainerController.trainerList);
 router.post("/approved", NotLoggedIn, TrainerController.Approved);
 router.post("/edit", NotLoggedIn, TrainerController.edit);

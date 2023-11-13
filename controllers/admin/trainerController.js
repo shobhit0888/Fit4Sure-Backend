@@ -71,6 +71,24 @@ class TrainerController {
     }
   };
 
+  static genOTP = async (req, res) => {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    otpStorage[req.body.phone] = otp;
+    console.log(otp);
+    try{
+      const client = require("twilio")(accountSid, authToken);
+      client.messages
+        .create({
+          body: `Your OTP is: ${otp}`,
+          from: twilioPhoneNumber,
+          to: phone,
+        })
+        .then(() => {
+          res.json({ success: true });
+        });
+    }
+    catch(err){console.log(err)}
+  }
   static add = async (req, res) => {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     otpStorage[req.body.phone] = otp;

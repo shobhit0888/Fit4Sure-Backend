@@ -685,7 +685,48 @@ class ApiController {
         .send("Something went wrong please try again later");
     }
   };
-  
+  static likeblog = async(req, res) => {
+    try{
+      const blogid = req.body.blogid;
+      const userid = req.userId;
+
+      const adduser = await Blog.findOneAndUpdate(
+        { _id: blogid },
+        { $addToSet: { users: userid }, $inc: { like: 1 } },
+        { new: true }
+      );
+
+      return res.json({
+        message: "data displayed successfully",
+        success: true,
+        data: adduser
+      });
+    }
+    catch(err){console.log(err)}
+  }
+  static bloglikelist = async(req,res) => {
+    try{
+      const blogid = req.body.blogid;
+      const blog = await Blog.findOne({_id : blogid})
+      if (!blog){
+        console.log("Blog not found")
+      }
+      else{
+        const list0 = blog.users;
+
+        return res.json({
+          message: "data displayed successfully",
+          success: true,
+          data: list0,
+        });
+      }
+    }
+    catch(err){
+      console.log(err);
+    }
+
+  }
+
   static findTrainer = async (req, res) => {
     try {
       const gender = req.body.gender;
