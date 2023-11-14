@@ -130,7 +130,37 @@ class AuthController {
   //     res.status(500).json({ message: "Something went wrong" });
   //   }
   // };
-
+  static genOTP = async (req, res) => {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    otpStorage[req.body.phone] = otp;
+    console.log(otp);
+    try {
+      const client = require("twilio")(accountSid, authToken);
+      client.messages
+        .create({
+          body: `Your OTP for registration is: ${otp}`,
+          from: twilioPhoneNumber,
+          to: phone,
+        })
+        .then(() => {
+          res.json({ success: true });
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  static otpverify = async(req, res) => {
+    const mobile_number = req.body.phone;
+    const otp = req.body.otp;
+    try{
+      if (otpStorage[mobile_number] !== otp) {
+        console.log("Invlid OTP");
+        return res.status(401).json({ message: "Invalid OTP" });
+      }
+      res.json({ success: true });
+    }
+    catch(err){console.log(err)}
+  }
   static signup = async (req, res) => {
     console.log(req.body);
     const {
@@ -178,7 +208,10 @@ class AuthController {
         httpOnly: true,
       };
       //save in cookie
-      res.status(200).cookie("token", token, options).json({ result: user, token});
+      res
+        .status(200)
+        .cookie("token", token, options)
+        .json({ result: user, token });
     } catch (error) {
       res.status(500).json({ message: "Something went wrong" });
     }
@@ -457,28 +490,7 @@ class AuthController {
   //     return res.status(401).send(msg);
   //   }
   // };
-  static sendOTP = async (req, res) => {
-    const mobile_number = req.body.contactNumber;
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    //   const otpStorage = {};
-    otpStorage[mobile_number] = otp;
-    console.log(otp);
-    try {
-      const client = require("twilio")(accountSid, authToken);
-      client.messages
-        .create({
-          body: `Your OTP is: ${otp}`,
-          from: twilioPhoneNumber,
-          to: mobile_number,
-        })
-        .then(() => {
-          res.json({success:true});
-        });
-    } catch (err) {
-      console.log(err);
-      return res.send(err);
-    }
-  };
+  
 
   static login = async (req, res) => {
     const mobile_number = req.body.contactNumber;
@@ -492,7 +504,7 @@ class AuthController {
       }
 
       if (otpStorage[mobile_number] !== otp) {
-        console.log("dada2");
+        console.log("Invalid OTP");
         return res.status(401).json({ message: "Invalid OTP" });
       }
 

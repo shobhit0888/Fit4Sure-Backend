@@ -10,8 +10,8 @@ router.post("/get_user_profile", AuthController.get_user_profile);
 router.post("/coupon-verify", auth, AuthController.coupon_verify);
 // router.post("/trainer_signin", AuthController.trainer_signin);
 router.post("/findmycoach", AuthController.findmycoach);
-router.post("/sendOTP", AuthController.sendOTP);
-
+router.post("/genOTP", AuthController.genOTP);
+router.post("/verifyOTP", AuthController.otpverify)
 // router.post("/signin", AuthController.signin);
 router.post("/signup", AuthController.signup);
 router.post("/google_auth", AuthController.googleAuthCallback);
