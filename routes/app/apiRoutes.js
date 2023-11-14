@@ -19,6 +19,7 @@ router.get("/packages/list", auth, ApiController.packages);
 router.get("/classes/list", auth, ApiController.classes);
 router.get("/documents/list", auth, ApiController.documents);
 router.get("/shortvideos/list", auth, ApiController.get_all_shortvideos);
+router.get("/blog_list", auth, ApiController.get_all_blogs)
 router.post(
   "/shortvideo_likes/list",
   auth,

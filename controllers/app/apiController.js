@@ -704,6 +704,13 @@ class ApiController {
     }
     catch(err){console.log(err)}
   }
+  static get_all_blogs = async(req,res) => {
+    try{
+        const all_blog = await Blog.find({});
+        res.json(all_blog)
+    }
+    catch(err){console.log(err)}
+  }
   static bloglikelist = async(req,res) => {
     try{
       const blogid = req.body.blogid;
