@@ -9,10 +9,67 @@ const firebaseApp = require("../../firebase");
 const storage = firebaseApp.storage();
 const bucket = storage.bucket();
 
+const generateUniqueFileName = (fileName) => {
+  const uniqueId = Date.now().toString();
+  const fileExtension = fileName.split(".").pop();
+  return `${uniqueId}.${fileExtension}`;
+};
+
+const uploadImageToFirebase = async (imageFile) => {
+  try {
+    const fileName = generateUniqueFileName(imageFile.originalname);
+    const filePath = `posts/${fileName}`;
+    const file = bucket.file(filePath);
+
+    // Create a write stream to upload the image file
+    const writeStream = file.createWriteStream({
+      metadata: {
+        contentType: imageFile.mimetype,
+      },
+    });
+
+    // Pipe the image file to the write stream
+    writeStream.end(imageFile.buffer);
+
+    // Handle the completion of the upload
+    return new Promise((resolve, reject) => {
+      writeStream.on("finish", () => {
+        resolve(filePath);
+      });
+
+      writeStream.on("error", (error) => {
+        reject(error);
+      });
+    });
+  } catch (error) {
+    throw new Error("Error uploading image to Firebase Storage");
+  }
+};
+
 class postController {
   static add = async(req, res) => {
     try{
+        upload(req, res, async (err) => {
+          if (err) {
+            return res.status(400).send({
+              error: true,
+              message: err.message,
+            });
+          }
 
+          if(req.file)
+          {
+            const imageUrl = await uploadImageToFirebase(req.file);
+            const { text, Trainer } = req.body;
+
+            let post = {
+              image: imageUrl,
+              text: text,
+              Trainer: Trainer
+            };
+          }
+
+        })
     }
     catch(err){console.log(err)}
   }

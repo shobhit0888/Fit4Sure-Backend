@@ -39,6 +39,7 @@ app.set("view engine", "ejs");
 // app.use(cors(corsOption));
 app.use(cookieParser());
 app.use(cors());
+app.options("*", cors());
 // public directory
 app.use(express.static(__dirname + "/public"));
 

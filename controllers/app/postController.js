@@ -33,6 +33,7 @@ const uploadImageToFirebase = async (imageFile) => {
     return new Promise((resolve, reject) => {
       writeStream.on("finish", () => {
         resolve(filePath);
+        
       });
 
       writeStream.on("error", (error) => {
