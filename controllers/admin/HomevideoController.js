@@ -53,6 +53,8 @@ const upload = multer({
 class HomevideoController {
   static add_homevideo = async (req, res) => {
     try {
+        
+    const [metadata] = await bucket.file(filePath).getMetadata();
       upload(req, res, async (err) => {
         if (err) {
           console.log(err);
