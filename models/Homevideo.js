@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const schema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: false,
   },
   video: {
     type: String,
-    required: true,
+    required: false,
   }
 });
 

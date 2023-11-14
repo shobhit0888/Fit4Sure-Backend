@@ -32,8 +32,14 @@ const uploadVideoToFirebase = async (videoFile) => {
     // Handle the completion of the upload
 
     return new Promise((resolve, reject) => {
-      writeStream.on("finish", () => {
-        resolve(filePath);
+      writeStream.on("finish", async () => {
+        const expiration = new Date(Date.now() + 60 * 60 * 1000);
+         const [url] = await file.getSignedUrl({
+           action: "read",
+           expires: expiration // Set expires to Infinity for no expiration
+         });
+
+        resolve(url);
       });
 
       writeStream.on("error", (error) => {
@@ -53,8 +59,6 @@ const upload = multer({
 class HomevideoController {
   static add_homevideo = async (req, res) => {
     try {
-        
-    const [metadata] = await bucket.file(filePath).getMetadata();
       upload(req, res, async (err) => {
         if (err) {
           console.log(err);
@@ -63,7 +67,7 @@ class HomevideoController {
             message: err,
           });
         }
-        const { title } = req.body;
+        const  title  = req.body.title;
         const video = await uploadVideoToFirebase(req.file);
 
         const homevideo = await Homevideo.create({

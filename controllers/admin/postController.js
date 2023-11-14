@@ -10,6 +10,12 @@ const storage = firebaseApp.storage();
 const bucket = storage.bucket();
 
 class postController {
+  static add = async(req, res) => {
+    try{
+
+    }
+    catch(err){console.log(err)}
+  }
   static list = async (req, res) => {
     const post = await Post.find().populate("user_id");
     const admin = await Adminauth.find({});
@@ -89,5 +95,9 @@ class postController {
     }
   };
 }
+const upload = multer({
+  storage: multer.memoryStorage(),
+  fileFilter: imageFilter,
+}).single("image");
 
 module.exports = postController;
