@@ -135,6 +135,7 @@ class AuthController {
     otpStorage[req.body.phone] = otp;
     console.log(otp);
     try {
+      const phone = req.body.phone
       const client = require("twilio")(accountSid, authToken);
       client.messages
         .create({

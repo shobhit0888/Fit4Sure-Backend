@@ -21,6 +21,7 @@ const fit_provides = require("./routes/admin/fit_provides");
 const transformations = require("./routes/admin/transformations");
 const testimonials = require("./routes/admin/testimonials");
 const team = require("./routes/admin/team");
+const Homevideo = require("./routes/admin/homevideo");
 
 const setting_Footer  = require("./routes/admin/setting_footer");
 const web_contact = require("./routes/admin/web_contact");
@@ -46,6 +47,7 @@ const category = require("./routes/admin/category");
 const milestones = require("./routes/admin/milestones");
 const web_aboutus = require("./routes/admin/web_aboutus");
 
+
 const AdminRoutes = (app) => {
   app.use("/", main);
   app.use("/admin", auth);
@@ -61,6 +63,7 @@ const AdminRoutes = (app) => {
   app.use("/admin/blog", blog);
   app.use("/admin/post", post);
   app.use("/admin/shortvideo", shortVideo);
+  app.use("/admin/homevideo", Homevideo);
   app.use("/admin/package", package);
   app.use("/admin/plan", plan);
   app.use("/admin/payment", payment);

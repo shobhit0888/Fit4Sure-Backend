@@ -32,14 +32,21 @@ if (!result) {
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
-const corsOption = {
-  credentials: true,
-  origin: ["http://localhost:3000"],
-};
-app.use(cors(corsOption));
+// const corsOption = {
+//   credentials: true,
+//   origin: ["http://localhost:3000"],
+// };
+// app.use(cors(corsOption));
 app.use(cookieParser());
 // public directory
 app.use(express.static(__dirname + "/public"));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
 
 //mongodb connection
 // mongoose

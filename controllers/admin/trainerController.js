@@ -75,6 +75,7 @@ class TrainerController {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     otpStorage[req.body.phone] = otp;
     console.log(otp);
+    const phone = req.body.phone;
     try{
       const client = require("twilio")(accountSid, authToken);
       client.messages
