@@ -10,6 +10,8 @@ const authToken = "37419abc85f88c70d6a805054cfb4d7c";
 const verifySid = "VA1de4dc8a0847b6b5a90cd114612f743e";
 const twilioPhoneNumber = "+16508177578";
 const otpStorage = {}
+const jwt = require("jsonwebtoken");
+
 
 const storage = firebaseApp.storage();
 

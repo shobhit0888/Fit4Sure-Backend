@@ -75,7 +75,7 @@ class HomevideoController {
 
         return res.send({
           error: false,
-          message: "ShortVideo added successfully",
+          message: "HomeVideo added successfully",
         });
       });
     } catch (error) {
