@@ -197,9 +197,9 @@ class AuthController {
 
       const token = jwt.sign(
         {
-          email: result.email,
-          id: result._id,
-          contactNumber: result.contactNumber,
+          email: user.email,
+          id: user._id,
+          contactNumber: user.contactNumber,
         },
         process.env.TOKEN_SECRET,
         { expiresIn: "1h" }
@@ -212,8 +212,9 @@ class AuthController {
       res
         .status(200)
         .cookie("token", token, options)
-        .json({ result: user, token });
+        .json({user, token });
     } catch (error) {
+      console.log(error)
       res.status(500).json({ message: "Something went wrong" });
     }
   };
