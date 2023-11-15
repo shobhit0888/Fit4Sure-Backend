@@ -9,6 +9,8 @@ const AppRoutes = require("./app-routes");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const createAdmin = require("./config/createAdmin");
+const session = require("express-session");
+
 // const session = require("express-session");
 // const MongoStore = require("connect-mongo")(session);
 const DB_CONNECT = process.env.DB_CONNECT;
@@ -42,6 +44,14 @@ app.use(cors());
 app.options("*", cors());
 // public directory
 app.use(express.static(__dirname + "/public"));
+
+// app.use(
+//   session({
+//     secret: "336159E96F79E4674158227A6E492", // Replace with a secure secret key
+//     resave: false,
+//     saveUninitialized: true,
+//   })
+// );
 
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");

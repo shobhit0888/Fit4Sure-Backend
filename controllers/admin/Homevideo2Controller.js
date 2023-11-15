@@ -1,4 +1,4 @@
-const Homevideo = require("../../models/Homevideo");
+const Homevideo2 = require("../../models/Homevideo2");
 const firebaseApp = require("../../firebase");
 const multer = require("multer");
 const videoFilter = require("../../config/videoFilter");
@@ -16,7 +16,7 @@ const generateUniqueFileName = (fileName) => {
 const uploadVideoToFirebase = async (videoFile) => {
   try {
     const fileName = generateUniqueFileName(videoFile.originalname);
-    const filePath = `homevideo/${fileName}`;
+    const filePath = `homevideo2/${fileName}`;
     const file = bucket.file(filePath);
 
     // Create a write stream to upload the video file
@@ -34,10 +34,10 @@ const uploadVideoToFirebase = async (videoFile) => {
     return new Promise((resolve, reject) => {
       writeStream.on("finish", async () => {
         const expiration = new Date(Date.now() + 60 * 60 * 1000);
-         const [url] = await file.getSignedUrl({
-           action: "read",
-           expires: expiration // Set expires to Infinity for no expiration
-         });
+        const [url] = await file.getSignedUrl({
+          action: "read",
+          expires: expiration, // Set expires to Infinity for no expiration
+        });
 
         resolve(url);
       });
@@ -56,7 +56,7 @@ const upload = multer({
   fileFilter: videoFilter,
 }).single("video");
 
-class HomevideoController {
+class Homevideo2Controller {
   static add_homevideo = async (req, res) => {
     try {
       upload(req, res, async (err) => {
@@ -70,16 +70,16 @@ class HomevideoController {
         const title = req.body.title;
         const video = await uploadVideoToFirebase(req.file);
 
-        const homevideo = await Homevideo.create({
+        const homevideo2 = await Homevideo2.create({
           title,
           video,
         });
 
-        await homevideo.save();
+        await homevideo2.save();
 
         return res.send({
           error: false,
-          message: "HomeVideo added successfully",
+          message: "HomeVideo2 added successfully",
         });
       });
     } catch (error) {
@@ -90,14 +90,13 @@ class HomevideoController {
     }
   };
 
-  static list = async (req, res) => {
-    try {
-      const data = await Homevideo.find({});
-      res.json(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  static list = async(req, res) => {
+        try{
+            const data = await Homevideo2.find({})
+            res.json(data)
+        }
+        catch(err){console.log(err)}
+  }
 }
 
-module.exports = HomevideoController;
+module.exports = Homevideo2Controller;

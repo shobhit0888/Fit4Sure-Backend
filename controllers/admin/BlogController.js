@@ -32,8 +32,13 @@ const uploadImageToFirebase = async (imageFile) => {
 
     // Handle the completion of the upload
     return new Promise((resolve, reject) => {
-      writeStream.on("finish", () => {
-        resolve(filePath);
+      writeStream.on("finish", async() => {
+         const [url] = await file.getSignedUrl({
+           action: "read",
+           expires: "03-01-2500" // Set expires to Infinity for no expiration
+         });
+
+        resolve(url);
       });
 
       writeStream.on("error", (error) => {
@@ -111,9 +116,9 @@ class BlogController {
 
         const imageUrl = await uploadImageToFirebase(req.file);
         const blog = new Blog({
-          heading : req.body.heading,
-          description: req.body.description,
           image: imageUrl,
+          heading : req.body.heading,
+          description: req.body.description
         });
         await blog.save();
         return res.send({

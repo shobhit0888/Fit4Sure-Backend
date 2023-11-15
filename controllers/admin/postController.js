@@ -5,7 +5,8 @@ const path = require("path");
 const fs = require("fs");
 const root = process.cwd();
 const firebaseApp = require("../../firebase");
-
+const multer = require("multer");
+const imageFilter = require('../../config/imageFilter')
 const storage = firebaseApp.storage();
 const bucket = storage.bucket();
 
@@ -33,8 +34,14 @@ const uploadImageToFirebase = async (imageFile) => {
 
     // Handle the completion of the upload
     return new Promise((resolve, reject) => {
-      writeStream.on("finish", () => {
-        resolve(filePath);
+      writeStream.on("finish", async () => {
+      const expiration = new Date(Date.now() + 60 * 60 * 1000);
+         const [url] = await file.getSignedUrl({
+           action: "read",
+           expires: "03-01-2500" // Set expires to Infinity for no expiration
+         });
+
+        resolve(url);
       });
 
       writeStream.on("error", (error) => {
@@ -67,8 +74,15 @@ class postController {
               text: text,
               Trainer: Trainer
             };
-          }
 
+            let saveObj = post;
+            await Post.create(saveObj);
+
+            res.json({message: "post added", post})
+          }
+          else{
+            res.json({message: "image not added"})
+          }
         })
     }
     catch(err){console.log(err)}
@@ -90,19 +104,19 @@ class postController {
     return res.render("admin/post-list", { post: postWithImageURLs, admin });
   };
 
-  static post_comments = async (req, res) => {
-    try{
-      const posts = await Post.find().populate("user_id") .populate("comments.user");
-      const admin = await Adminauth.find({});
+  // static post_comments = async (req, res) => {
+  //   try{
+  //     const posts = await Post.find().populate("user_id") .populate("comments.user");
+  //     const admin = await Adminauth.find({});
 
-      return res.render("admin/post_comments", { posts, admin });
-    } catch (error) {
-      console.log(error);
-      return res
-        .status(500)
-        .send("Something went wrong please try again later");
-    }
-  };
+  //     return res.render("admin/post_comments", { posts, admin });
+  //   } catch (error) {
+  //     console.log(error);
+  //     return res
+  //       .status(500)
+  //       .send("Something went wrong please try again later");
+  //   }
+  // };
 
   static delete = async (req, res) => {
     try {

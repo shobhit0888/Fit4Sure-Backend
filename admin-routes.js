@@ -22,6 +22,7 @@ const transformations = require("./routes/admin/transformations");
 const testimonials = require("./routes/admin/testimonials");
 const team = require("./routes/admin/team");
 const Homevideo = require("./routes/admin/homevideo");
+const Homevideo2 = require("./routes/admin/homevideo2")
 
 const setting_Footer  = require("./routes/admin/setting_footer");
 const web_contact = require("./routes/admin/web_contact");
@@ -64,6 +65,7 @@ const AdminRoutes = (app) => {
   app.use("/admin/post", post);
   app.use("/admin/shortvideo", shortVideo);
   app.use("/admin/homevideo", Homevideo);
+  app.use("/admin/homevideo2", Homevideo2);
   app.use("/admin/package", package);
   app.use("/admin/plan", plan);
   app.use("/admin/payment", payment);

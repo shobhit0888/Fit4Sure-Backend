@@ -131,7 +131,7 @@ class AuthController {
   //   }
   // };
   static genOTP = async (req, res) => {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otp = Math.floor(10000 + Math.random() * 90000).toString();
     otpStorage[req.body.phone] = otp;
     console.log(otp);
     try {

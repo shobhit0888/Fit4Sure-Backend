@@ -14,11 +14,6 @@ const schema = new mongoose.Schema({
     type: String,
     require: true,
   },
-  date_time: {
-    type: String,
-    require: true,
-  },
-
   created_at: {
     type: String,
     default: Date.now,
