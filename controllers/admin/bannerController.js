@@ -7,18 +7,63 @@ const imageFilter = require("../../config/imageFilter");
 const fs = require("fs");
 const moment = require("moment");
 
+const firebaseApp = require("../../firebase"); 
+
+
+const storage = firebaseApp.storage();
+
+const bucket = firebaseApp.storage().bucket();
+
+const generateUniqueFileName = (fileName) => {
+  const uniqueId = Date.now().toString();
+  const fileExtension = fileName.split(".").pop();
+  return `${uniqueId}.${fileExtension}`;
+};
+
+const uploadImageToFirebase = async (imageFile) => {
+  try {
+    const fileName = generateUniqueFileName(imageFile.originalname);
+    const filePath = `trainers/${fileName}`;
+    const file = bucket.file(filePath);
+
+    // Create a write stream to upload the image file
+    const writeStream = file.createWriteStream({
+      metadata: {
+        contentType: imageFile.mimetype,
+      },
+    });
+
+    // Pipe the image file to the write stream
+    writeStream.end(imageFile.buffer);
+
+    // Handle the completion of the upload
+    return new Promise((resolve, reject) => {
+      writeStream.on("finish", async () => {
+        const expiration = new Date(Date.now() + 60 * 60 * 1000);
+        const [url] = await file.getSignedUrl({
+          action: "read",
+          expires: expiration, // Set expires to Infinity for no expiration
+        });
+
+        resolve(url);
+      });
+
+      writeStream.on("error", (error) => {
+        reject(error);
+      });
+    });
+  } catch (error) {
+    throw new Error("Error uploading image to Firebase Storage");
+  }
+};
+
+
 class BannerController {
   static list = async (req, res) => {
     try {
-      let banners = await Banner.find().sort({
-        created_at: -1,
-      });
-      banners = await formatData(banners);
-      const admin = await Adminauth.find({});
-      return res.render("admin/banners", {
-        banners,
-        admin,
-      });
+      let banners = await Banner.find();
+      res.json(banners);
+      
     } catch (error) {
       return res.send("Something went wrong please try again later");
     }
@@ -27,6 +72,7 @@ class BannerController {
   static add = async (req, res) => {
     console.log(req.file)
     try {
+      const image = uploadImageToFirebase(req.file)
       upload(req, res, async function (err) {
         if (req.fileValidationError) {
           return res.send(req.fileValidationError);
@@ -41,6 +87,7 @@ class BannerController {
         }
         const banner = Banner({
           basename: req.file.filename,
+          image: image
         });
         await banner.save();
         return res.send({
@@ -85,21 +132,12 @@ const formatData = (data) => {
     resolve(data);
   });
 };
-// Set The Storage Engine
-const storage = multer.diskStorage({
-  destination: path.join(root, "/public/uploads/banners"),
-  filename: function (req, file, cb) {
-    cb(null, `${Date.now()}.jpg`);
-  },
-});
 
-// Init Upload
+
 const upload = multer({
-  storage: storage,
-  // limits: {
-  //     fileSize: 5000000
-  // },
+  storage: multer.memoryStorage(),
   fileFilter: imageFilter,
 }).single("image");
+
 
 module.exports = BannerController;

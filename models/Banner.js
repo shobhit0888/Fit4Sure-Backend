@@ -6,6 +6,9 @@ const Schema = new mongoose.Schema({
     max: 50,
     required: true,
   },
+  image: {
+    type: String
+  },
   created_at: {
     type: String,
     default: Date.now(),
