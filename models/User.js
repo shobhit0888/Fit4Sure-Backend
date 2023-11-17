@@ -38,6 +38,10 @@ const schema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  optedplan: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Plan"
+  }
 });
 
 module.exports = mongoose.model("User", schema);
