@@ -10,6 +10,7 @@ router.get("/list", TrainerController.trainerList);
 router.post("/approved", NotLoggedIn, TrainerController.Approved);
 router.post("/edit", NotLoggedIn, TrainerController.edit);
 router.post("/delete", NotLoggedIn, TrainerController.delete);
+router.get("/gettrainer", TrainerController.getTrainer);
 router.get(
   "/details/:trainerId",
   NotLoggedIn,

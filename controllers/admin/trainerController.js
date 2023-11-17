@@ -79,6 +79,16 @@ class TrainerController {
     }
   };
 
+  static getTrainer = async(req,res) => {
+    try{
+      const trainer = await Trainer.find({phone : req.body.phone})
+      res.json(trainer)
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
   static genOTP = async (req, res) => {
     const otp = Math.floor(10000 + Math.random() * 90000).toString();
     otpStorage[req.body.phone] = otp;
