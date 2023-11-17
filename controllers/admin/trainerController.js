@@ -41,8 +41,14 @@ const uploadImageToFirebase = async (imageFile) => {
 
     // Handle the completion of the upload
     return new Promise((resolve, reject) => {
-      writeStream.on("finish", () => {
-        resolve(filePath);
+      writeStream.on("finish", async () => {
+      const expiration = new Date(Date.now() + 60 * 60 * 1000);
+         const [url] = await file.getSignedUrl({
+           action: "read",
+           expires: expiration // Set expires to Infinity for no expiration
+         });
+
+        resolve(url);      
       });
 
       writeStream.on("error", (error) => {
@@ -96,12 +102,13 @@ class TrainerController {
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
     otpStorage[req.body.phone] = otp;
     console.log(otp);
+    // const Image = await uploadImageToFirebase(req.file);
     try {
       //   if (!req.file) {
       //     return res.status(400).send("Please upload an image file");
       //   }
 
-      // const imageUrl = await uploadImageToFirebase(req.file);
+      const imageUrl = await uploadImageToFirebase(req.file);
 
       const trainer = new Trainer({
         // image: imageUrl,
@@ -123,6 +130,7 @@ class TrainerController {
         category: req.body.category,
         people_trained: req.body.people_trained,
         rating: req.body.rating,
+        image: imageUrl,
         website_desc: req.body.website_desc,
       });
       const email = req.body.email;
