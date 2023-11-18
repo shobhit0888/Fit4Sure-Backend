@@ -20,9 +20,7 @@ class PlanController {
   static all = async (req, res) => {
     try {
       const plan = await Plan.find({});
-      return res.send({
-        plan,
-      });
+      return res.json(plan)
     } catch (error) {
       console.log(error);
       return res

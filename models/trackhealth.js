@@ -1,46 +1,31 @@
 const mongoose = require("mongoose");
 
 const Trackhealth = new mongoose.Schema({
-  User: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+  BMI: {
+    Type: Number,
   },
-  height: {
-    type: Number,
-    required: true,
+  BMR: {
+    Type: Number,
   },
-  weight: {
-    type: Number,
-    required: true,
+  BFP: {
+    Type: Number,
   },
-  age: {
-    type: Number,
-    required: true,
+  IBW: {
+    Type: Number,
   },
-  gender: {
-    type: String,
-    required: true,
+  TDEE: {
+    Type: Number,
   },
-  activity_level: {
-    type: String,
-    required: false,
+  WHR: {
+    Type: Number,
   },
-  goal: {
-    type: String,
-    required: false,
+  ABSI: {
+    Type: Number,
   },
-  approach: {
-    type: String,
-    required: false,
-  },
-  waist: {
-    type: Number,
-    required: true,
-  },
-  hip: {
-    type: Number,
-    required: true,
+  updated_at: {
+    type: Date,
+    default: Date.now,
   },
 });
 
-module.exports = mongoose.model("Trackhealth", Trackhealth);
+module.exports = Trackhealth;

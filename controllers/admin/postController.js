@@ -88,20 +88,14 @@ class postController {
     catch(err){console.log(err)}
   }
   static list = async (req, res) => {
-    const post = await Post.find().populate("user_id");
-    const admin = await Adminauth.find({});
-    const postWithImageURLs = await Promise.all(
-      post.map(async (post) => {
-        if(!post.image) return post;
-        const file = storage.bucket().file(post.image);
-        const [signedUrl] = await file.getSignedUrl({
-          action: "read",
-          expires: "03-01-2500",
-        });
-        return { ...post.toObject(), image: signedUrl };
-      })
-    );
-    return res.render("admin/post-list", { post: postWithImageURLs, admin });
+    try{
+      const post = Post.find({});
+      res.json(post);
+    }
+    catch(err)
+    {
+      console.log(err)
+    }
   };
 
   // static post_comments = async (req, res) => {

@@ -23,7 +23,7 @@ const generateUniqueFileName = (fileName) => {
 const uploadImageToFirebase = async (imageFile) => {
   try {
     const fileName = generateUniqueFileName(imageFile.originalname);
-    const filePath = `trainers/${fileName}`;
+    const filePath = `banners/${fileName}`;
     const file = bucket.file(filePath);
 
     // Create a write stream to upload the image file
@@ -53,6 +53,7 @@ const uploadImageToFirebase = async (imageFile) => {
       });
     });
   } catch (error) {
+    console.log(error)
     throw new Error("Error uploading image to Firebase Storage");
   }
 };
@@ -63,41 +64,40 @@ class BannerController {
     try {
       let banners = await Banner.find();
       res.json(banners);
-      
     } catch (error) {
       return res.send("Something went wrong please try again later");
     }
   };
 
   static add = async (req, res) => {
-    console.log(req.file)
     try {
-      const image = uploadImageToFirebase(req.file)
-      upload(req, res, async function (err) {
-        if (req.fileValidationError) {
-          return res.send(req.fileValidationError);
-        } else if (!req.file) {
-          return res.send("Please upload an image");
-        } else if (err instanceof multer.MulterError) {
-          console.log(err);
-          return res.send(err);
-        } else if (err) {
-          console.log(err);
-          return res.send(err);
+      upload(req, res, async (err) => {
+        if (err) {
+          return res.status(400).send({
+            error: true,
+            message: err.message,
+          });
         }
-        const banner = Banner({
-          basename: req.file.filename,
-          image: image
-        });
-        await banner.save();
-        return res.send({
-          error: false,
-          message: "Banner added successfully",
-        });
+
+        if (req.file) {
+          const imageUrl = await uploadImageToFirebase(req.file);
+          const {  basename } = req.body;
+
+          let post = {
+            image: imageUrl,
+            basename: basename
+          };
+
+          let saveObj = post;
+          await Banner.create(saveObj);
+
+          res.json({ message: "Banner added", post });
+        } else {
+          res.json({ message: "image not added" });
+        }
       });
-    } catch (error) {
-      console.log(error);
-      return res.send("Somthing went wrong please try again later");
+    } catch (err) {
+      console.log(err);
     }
   };
 
