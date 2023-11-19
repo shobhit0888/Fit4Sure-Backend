@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const trackhealth = require("./trackhealth");
-
+const planinfo  = require("./planinfo")
 const schema = new mongoose.Schema({
   name: {
     type: String,
@@ -39,10 +39,7 @@ const schema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
-  optedplan: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Plan",
-  },
+  optedplan:[planinfo.schema],
   record: [trackhealth.schema],
 });
 

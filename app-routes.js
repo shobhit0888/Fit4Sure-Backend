@@ -9,12 +9,13 @@ const userContactInfo = require("./routes/app/userContactInfo");
 const test = require("./routes/app/test");
 const schedule = require("./routes/app/schedule");
 const trackhealth = require("./routes/app/trackhealth")
-
+const plan = require("./routes/app/plan")
 const AppRoutes = (app) => {
   app.use("/app", home);
   app.use("/app/user", auth);
   app.use("/app", apiRoutes);
   app.use("/app/post", post);
+  app.use("/app/plan", plan);
   app.use("/app/shortvideo", shortVideo);
   app.use("/app/payment", payment);
   app.use("/app/notification", notification);
