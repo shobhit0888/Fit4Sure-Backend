@@ -87,6 +87,20 @@ class postController {
     }
     catch(err){console.log(err)}
   }
+  static pending = async(req,res) => {
+    try{
+      const data = await Post.find({status: "pending"})
+      res.json({message: "pending aprooval", data})
+    }
+    catch(err){console.log(err)}
+  }
+  static aproovepost = async(req,res) => {
+    try{
+      const post = req.body.post;
+      const aprooved = await Post.findByIdAndUpdate(post, {$set: {status: "aprooved"}})
+      res.json({message:"aprooved the post", aprooved})
+    }catch(err){console.log(err)}
+  }
   static list = async (req, res) => {
     try{
       const post = Post.find({});
@@ -133,32 +147,7 @@ class postController {
     }
   };
 
-  static Approved = async (req, res) => {
-    try {
-      const data = req.body;
-
-      await Post.findByIdAndUpdate(data.id, {
-        approved: data.approved,
-      });
-      ({
-        type: "form_status",
-        data: {
-          id: Post.id,
-          status: data.approved ? "approved" : "disapproved",
-          time: Date.now(),
-        },
-      });
-      return res.send({
-        error: false,
-        message: "Post status updated successfully",
-      });
-    } catch (error) {
-      console.log(error);
-      return res
-        .status(500)
-        .send("Something went wrong please try again later");
-    }
-  };
+  
 }
 const upload = multer({
   storage: multer.memoryStorage(),

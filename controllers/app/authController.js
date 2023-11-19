@@ -816,33 +816,33 @@ class AuthController {
   };
 
   static coupon_verify = async (req, res) => {
-    // let msg = "Something went wrong please try again later";
-    // try {
-    //   var token = req.body.token;
-    //   var coupon_code = req.body.coupon_code;
-    //   const payload = jwt.decode(token, process.env.TOKEN_SECRET);
-    //   const user = await User.findById(payload.id);
-    //   if (!user) return res.status(401).send("User not found");
-    //   let findData = {
-    //     coupon_code: coupon_code,
-    //   };
-    //   let findRec = await Coupon.findOne(findData);
-    //   if (!findRec) return res.status(401).send("Invalid coupon");
-    //   if (findRec.is_used == true)
-    //     return res.status(401).send("Coupon already used");
-    //   let returnObj = {
-    //     message: "Coupon Applied",
-    //     data: {
-    //       coupon_code: coupon_code,
-    //       valid_start_date: findRec.valid_start_date,
-    //       valid_expiry_date: findRec.valid_expiry_date,
-    //     },
-    //   };
-    //   res.send(returnObj);
-    // } catch (error) {
-    //   console.log(error);
-    //   return res.status(401).send(msg);
-    // }
+    let msg = "Something went wrong please try again later";
+    try {
+      var token = req.body.token;
+      var coupon_code = req.body.coupon_code;
+      const payload = jwt.decode(token, process.env.TOKEN_SECRET);
+      const user = await User.findById(payload.id);
+      if (!user) return res.status(401).send("User not found");
+      let findData = {
+        coupon_code: coupon_code,
+      };
+      let findRec = await Coupon.findOne(findData);
+      if (!findRec) return res.status(401).send("Invalid coupon");
+      if (findRec.is_used == true)
+        return res.status(401).send("Coupon already used");
+      let returnObj = {
+        message: "Coupon Applied",
+        data: {
+          coupon_code: coupon_code,
+          valid_start_date: findRec.valid_start_date,
+          valid_expiry_date: findRec.valid_expiry_date,
+        },
+      };
+      res.send(returnObj);
+    } catch (error) {
+      console.log(error);
+      return res.status(401).send(msg);
+    }
   };
 }
 

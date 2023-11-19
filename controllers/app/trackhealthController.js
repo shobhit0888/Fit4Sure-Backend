@@ -16,42 +16,19 @@ class trackhealthController {
         WHR: req.body.WHR,
         ABSI: req.body.ABSI,
       };
-      temp.push(data);
-    //   console.log(temp)
-        // const addlog = await User.findOneAndUpdate(
-        //   { _id: user },
-        //   { BMI: req.body.BMI },
-        //   { BMR: req.body.BMR },
-        //   { BFP: req.body.BFP },
-        //   { IBW: req.body.IBW },
-        //   { TDEE: req.body.TDEE },
-        //   { WHR: req.body.WHR },
-        //   { ABSI: req.body.ABSI },
-        //   {
-            // $addToSet: {
-            //   record: {
-            //     BMI: req.body.BMI,
-            //     BMR: req.body.BMR,
-            //     BFP: req.body.BFP,
-            //     IBW: req.body.IBW,
-            //     TDEE: req.body.TDEE,
-            //     WHR: req.body.WHR,
-            //     ABSI: req.body.ABSI,
-            //   },
-        //     },
-        //   },
-        //   { new: true }
-        // );
-        const addlog = await User.findByIdAndUpdate(user, {$addToSet: {
-              record: [{
-                BMI: req.body.BMI,
-                BMR: req.body.BMR,
-                BFP: req.body.BFP,
-                IBW: req.body.IBW,
-                TDEE: req.body.TDEE,
-                WHR: req.body.WHR,
-                ABSI: req.body.ABSI
-              }]}}, {new: true})
+      console.log(data)
+      
+        const addlog = await User.findByIdAndUpdate(
+          user,
+          {
+            $push: {
+              record: data,
+            },
+          },
+          { new: true, useFindAndModify:false },
+          
+        );
+        
         console.log(addlog)
       res
         .status(201)

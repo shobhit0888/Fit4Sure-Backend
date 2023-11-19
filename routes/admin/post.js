@@ -5,6 +5,6 @@ router.post("/add", postController.add)
 router.get("/list", postController.list);
 // router.get("/comments", NotLoggedIn, postController.post_comments);
 router.post("/delete", NotLoggedIn, postController.delete);
-router.post("/approved", NotLoggedIn, postController.Approved);
-
+router.post("/aprooved",  postController.aproovepost);
+router.get("/pending", postController.pending)
 module.exports = router;

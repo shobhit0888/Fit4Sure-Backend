@@ -1,31 +1,31 @@
 const mongoose = require("mongoose");
-
 const Trackhealth = new mongoose.Schema({
   BMI: {
-    Type: Number,
+    type: Number,
+    default: 1
   },
   BMR: {
-    Type: Number,
+    type: Number,
   },
   BFP: {
-    Type: Number,
+    type: Number,
   },
   IBW: {
-    Type: Number,
+    thisype: Number,
   },
   TDEE: {
-    Type: Number,
+    type: Number,
   },
   WHR: {
-    Type: Number,
+    type: Number,
   },
   ABSI: {
-    Type: Number,
+    type: Number,
   },
   updated_at: {
     type: Date,
     default: Date.now,
   },
 });
-
-module.exports = Trackhealth;
+module.exports = mongoose.model("Trackhealth", Trackhealth);
+// module.exports = Trackhealth;

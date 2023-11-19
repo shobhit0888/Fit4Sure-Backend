@@ -1052,6 +1052,33 @@ class ApiController {
         .send("Something went wrong please try again later");
     }
   };
+  static rateTrainer = async(req,res) => {
+    try{
+      const user = req.userId;
+      const trainer = req.body.trainer;
+
+      const data = {
+        user:user,
+        rate:req.body.rate,
+        review:req.body.review
+      }
+
+      const rate = await Trainer.findByIdAndUpdate(
+        trainer,
+        {
+          $push: {
+            rating: data,
+          },
+        },
+        { new: true, useFindAndModify: false }
+      );
+
+      console.log(rate);
+      res.json({message: "rated successfully", rate })
+    }
+    catch(err){console.log(err)
+    res.send(err)}
+  }
   static get_approach_dropdown = async (req, res) => {
     try {
       let data = [
@@ -1134,6 +1161,8 @@ class ApiController {
       return res.status(401).send(msg);
     }
   };
+  
 }
+
 
 module.exports = ApiController;

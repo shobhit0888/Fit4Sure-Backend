@@ -8,6 +8,10 @@ const schema = new mongoose.Schema({
   image: {
     type: String,
   },
+  status: {
+    type: String,
+    default: "pending"
+  },
   text: {
     type: String,
   },

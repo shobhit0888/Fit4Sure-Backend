@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-
+const rating = require("./Rating")
 const TrainerSchema = new mongoose.Schema({
   category: 
     {
@@ -71,9 +71,8 @@ const TrainerSchema = new mongoose.Schema({
   people_trained: {
     type: Number,
   },
-  rating: {
-    type: Number,
-  },
+  rating: [rating.schema]
+  ,
   website_desc: {
     type: String,
   },

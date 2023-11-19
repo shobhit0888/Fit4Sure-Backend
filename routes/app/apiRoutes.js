@@ -25,6 +25,7 @@ router.post(
   auth,
   ApiController.shortvideo_likes
 );
+router.post("/rateTrainer", auth, ApiController.rateTrainer);
 router.get("/saved_videos/list", auth, ApiController.saved_videos);
 router.post("/selectTrainer", auth, ApiController.selectTrainer);
 router.post("/health_info", auth, ApiController.health_info);
