@@ -8,6 +8,7 @@ const notification = require("./routes/app/notification");
 const userContactInfo = require("./routes/app/userContactInfo");
 const test = require("./routes/app/test");
 const schedule = require("./routes/app/schedule");
+const trackhealth = require("./routes/app/trackhealth")
 
 const AppRoutes = (app) => {
   app.use("/app", home);
@@ -20,6 +21,8 @@ const AppRoutes = (app) => {
   app.use("/app/usercontactinfo", userContactInfo);
   app.use("/app/test", test);
   app.use("/app/schedule", schedule);
+  app.use("/app/trackhealth", trackhealth);
+
 };
 
 module.exports = AppRoutes;
