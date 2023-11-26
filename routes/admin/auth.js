@@ -20,7 +20,12 @@ router.post("/login", async (req, res) => {
     username: username,
   });
   if (!user) return res.status(401).send("Account not found");
-  const validPassword = await bcrypt.compare(password, user.password);
+  
+  const validPassword = password === user.password;
+  console.log("hello1"+password);
+  console.log("hello2"+user.password);
+  console.log("hello3"+validPassword);
+  console.log("hello4"+bcrypt.compare(password, user.password));
   if (!validPassword) return res.status(401).send("Invalid Password");
   req.session.username = user.username;
   req.session.password = user.password;
