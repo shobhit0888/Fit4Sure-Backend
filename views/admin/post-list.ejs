@@ -1,0 +1,250 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <!--   Start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Post</h4>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead class="t-head">
+                        <tr>
+                          <th>S.No.</th>
+                          <th>image</th>
+                          <th>User</th>
+                          <th>Text</th>
+                          <th>Date Time</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% if(!post[0]) { %>
+                        <tr>
+                          <td colspan="100%">No Data</td>
+                        </tr>
+                        <% } else {%> <% post.forEach(function(post,index){ %>
+                        <tr>
+                          <td><%= index+1 %></td>
+                          <td>
+                            <% if(post.image) {%>
+                            <img
+                              alt="file"
+                              src=<%= post.image %>
+                              height="50px"
+                              width="50px"
+                            />
+                            <% }else { %>
+                              <p>Image not found</p>
+                            <% } %>
+                          </td>
+                          <td>
+                            <%= post.user_id ? post.user_id.name : 'Not Available' %>
+                          </td>
+                          <td><%= post.text %></td>
+
+                          <td><%= convertDate(post.date) %></td>
+                          <td>
+                            <button
+                              class="btn <%- post.approved ? 'bg-success' : 'bg-danger' %> text-white"
+                              data-toggle="modal"
+                              data-model="<%= JSON.stringify(post) %>"
+                              id="accept_btn"
+                              style="cursor: pointer"
+                            >
+                              <%- post.approved ? 'Active' : 'Inactive' %></button
+                            >
+                          </td>
+                          <td>
+                            <i
+                              class="btn btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deleteblog('<%-post._id %>')"
+                            >
+                            </i>
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--  Ends -->
+    </div>
+  </section>
+  <!-- Approved -->
+  <div class="modal fade" id="action">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="actionForm" class="mx-5">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Action</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="mb-3">
+              <input
+                name="approved"
+                type="checkbox"
+                id="approved"
+                data-width="100%"
+                data-toggle="toggle"
+                data-on="Active"
+                data-off="InActive"
+                data-onstyle="success"
+                data-offstyle="danger"
+              />
+            </div>
+            <input name="id" type="hidden" id="actionid" name="actionid" />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              close
+            </button>
+            <button type="submit" class="btn btn-success">save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+</div>
+<!-- Main Content -->
+
+<% 
+function convertDate(date) {
+  var d = new Date(date);
+  var datestring =
+    d.getDate() +
+    "-" +
+    (d.getMonth() + 1) +
+    "-" +
+    d.getFullYear() +
+    " " + 
+    d.getHours() +
+    ":" +
+    d.getMinutes();
+  return datestring;
+}
+%>
+
+<%- include ('partials/footer.ejs') %>
+<script>
+  function deleteblog(id) {
+    if (confirm("Do you really want to delete this record")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/post/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>
+
+<script>
+  $(document).on("click", "#accept_btn", function (e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#action").modal("show");
+    var data = finalData;
+    // console.log(data)
+
+    $("#actionid").val(data._id);
+
+    approved
+      ? $("#approved").bootstrapToggle("on")
+      : $("#approved").bootstrapToggle("off");
+  });
+</script>
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  var actionForm = $("#actionForm");
+  actionForm.on("submit", addslidersubmitHandler);
+
+  function addslidersubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = getFormData(actionForm);
+    formData.approved = $("#approved").is(":checked");
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/post/approved",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>

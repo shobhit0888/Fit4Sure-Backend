@@ -1,0 +1,63 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <!--  Start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Shortvideos Comments</h4>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead class="t-head">
+                        <tr>
+                          <th>S.No</th>
+                          <th>User</th>
+                          <th>Description</th>
+                          <th>Comment</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% if(!shortvideocomments[0]){%>
+                        <tr>
+                            <td colspan="4">No shortvideo comments Found</td>
+                        </tr>
+                        <% } else { shortvideocomments.forEach(function(shortvideocomments,test){ %>
+                        <tr>
+                            <td><%= test+1%> </td>
+                            <td><%= shortvideocomments.user_id ? shortvideocomments.user_id.name : " " %> </td>
+                            <td><%= shortvideocomments.shortvideo_id.description %> </td>
+                            <td><%= shortvideocomments.comment %> </td>
+                        </tr>
+    
+                        <% }); } %>
+                    </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ends -->
+    </div>
+  </section>
+</div>
+<!-- Main Content -->
+
+<%- include ('partials/footer.ejs') %>

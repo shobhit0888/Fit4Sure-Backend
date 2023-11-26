@@ -1,0 +1,510 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Schedule</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add Schedule"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table id="example" class="table table-md">
+                      <thead>
+                        <tr class="text-center">
+                          <th>User</th>
+                          <th>Trainer</th>
+                          <th>Category</th>
+                          <th>Zoom Link</th>
+                          <th>Meeting Id</th>
+                          <th>Meeting Password</th>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-center">
+                        <% if(!classes[0]) { %>
+                        <tr>
+                          <td colspan="100%">No Data</td>
+                        </tr>
+                        <% } else {%> <% classes.forEach(function(classes){%>
+                        <tr>
+                          <td>
+                            <%= classes.user_id ? classes.user_id.name : "" %>
+                          </td>
+                          <td width="10%">
+                            <%= classes.trainer_id ? classes.trainer_id.name : "" %>
+                          </td>
+                          <td width="10%"><% if (classes.trainer_id && classes.trainer_id.category) { %>
+                            <% classes.trainer_id.category.forEach(function(categoryId) { %>
+                              <% var category = categories.find(function(c) { return c._id.toString() === categoryId.toString(); }); %>
+                              <%= category ? category.name : "" %>
+                            <% }); %>
+                          <% } else { %>
+                            ""
+                          <% } %></td>
+                          <td width="10%"><%= classes.link %></td>
+                          <td width="10%"><%= classes.meeting_id %></td>
+                          <td width="10%"><%= classes.meeting_password %></td>
+                          <td width="10%"><%= classes.date %></td>
+                          <td width="10%"><%= classes.time %></td>
+                          <td
+                            class="d-flex justify-content-between align-center"
+                          >
+                            <a
+                              href="documents/<%= classes._id %>"
+                              data-toggle="tooltip"
+                              data-bs-original-title="Documents Upload"
+                              ><i class="btn btn-success btn-md fas fa-add"></i
+                            ></a>
+
+                            <i
+                              class="btn btn-info btn-md fas fa-edit"
+                              id="edit_btn"
+                              data-toggle="modal"
+                              data-model="<%= JSON.stringify(classes) %>"
+                            ></i>
+                            <i
+                              class="btn btn-danger btn-md fas fa-trash-alt"
+                              onclick="deleteslider('<%= classes._id %>');"
+                            ></i>
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal mt-3" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Schedule</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form
+              id="addnewslider"
+              class="mx-5 form-group font-weight-bold showcursor: true"
+            >
+              <div class="mb-3">
+                <label>User: </label>
+                <select
+                  class="form-control show-tick ms select2"
+                  data-placeholder="Select"
+                  name="user_id"
+                  id="user_id"
+                >
+                  <option value="" disabled selected>Select</option>
+                  <% user_id.forEach(function(user_id){%>
+                  <option value="<%= user_id._id %>">
+                    <%= user_id.name %>
+                  </option>
+                  <% }); %>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label>Trainer: </label>
+                <select
+                  class="form-control show-tick ms select2"
+                  data-placeholder="Select"
+                  name="trainer_id"
+                  id="trainer_id"
+                >
+                  <option value="" disabled selected>Select</option>
+                  <% trainer_id.forEach(function(trainer_id){%>
+                  <option value="<%= trainer_id._id %>">
+                    <%= trainer_id.name %>
+                  </option>
+                  <% }); %>
+                </select>
+              </div>
+              <!-- <div class="mb-3">
+                <label>Title: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  name="title"
+                  placeholder="Title"
+                />
+              </div> -->
+              <div class="mb-3">
+                <label>Zoom Link: </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="link"
+                  name="link"
+                  placeholder="Zoom link"
+                />
+              </div>
+              <div class="row">
+                <div class="mb-3 w-50">
+                  <label>Meeting Id: </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="meeting_id"
+                    name="meeting_id"
+                    placeholder="Meeting Id"
+                  />
+                </div>
+                <div class="mb-3 w-50">
+                  <label>Meeting Password: </label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="meeting_password"
+                    name="meeting_password"
+                    placeholder="Meeting Password"
+                  />
+                </div>
+              </div>
+              <div class="row">
+                <div class="mb-3 w-50">
+                  <label>Date: </label>
+                  <input
+                    type="date"
+                    class="form-control"
+                    id="date"
+                    name="date"
+                    placeholder="Date"
+                  />
+                </div>
+                <div class="mb-3 w-50">
+                  <label>Time: </label>
+                  <input
+                    type="time"
+                    class="form-control"
+                    id="time"
+                    name="time"
+                    placeholder="Time"
+                  />
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="btn mt-3 pull-right"
+                style="background-color: #6fd943; color: #fff"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+
+  <!-- Modal body -->
+  <div class="modal fade" id="edit">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Schedule</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form
+            id="editform"
+            class="mx-5 form-group font-weight-bold showcursor: true"
+          >
+            <input type="hidden" id="editid" name="editid" />
+            <div class="mb-3">
+              <label>User: </label>
+              <select
+                class="form-control show-tick ms select2"
+                data-placeholder="Select"
+                name="user_id"
+                id="edit_user_id"
+              >
+                <option value="" disabled selected>Select</option>
+                <% user_id.forEach(function(user_id){%>
+                <option value="<%= user_id._id %>">
+                  <%= user_id.name %>
+                </option>
+                <% }); %>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label>Trainer: </label>
+              <select
+                class="form-control show-tick ms select2"
+                data-placeholder="Select"
+                name="trainer_id"
+                id="edit_trainer_id"
+              >
+                <option value="" disabled selected>Select</option>
+                <% trainer_id.forEach(function(trainer_id){%>
+                <option value="<%= trainer_id._id %>">
+                  <%= trainer_id.name %>
+                </option>
+                <% }); %>
+              </select>
+            </div>
+            <!-- <div class="mb-3">
+              <label>Edit Title</label>
+              <input
+                id="edit_title"
+                name="title"
+                type="text"
+                class="form-control"
+                placeholder="Enter Title"
+              />
+            </div> -->
+            <div class="mb-3">
+              <label>Edit Zoom Link</label>
+              <input
+                id="edit_link"
+                name="link"
+                type="text"
+                class="form-control"
+                placeholder="Enter   Zoom Link"
+              />
+            </div>
+
+            <div class="row">
+              <div class="mb-3 w-50">
+                <label>Edit Meeting Id</label>
+                <input
+                  id="edit_meeting_id"
+                  name="meeting_id"
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter Meeting Id"
+                />
+              </div>
+              <div class="mb-3 w-50">
+                <label>Edit Meeting password</label>
+                <input
+                  id="edit_meeting_password"
+                  name="meeting_password"
+                  type="password"
+                  class="form-control"
+                  placeholder="Enter password"
+                />
+              </div>
+            </div>
+            <div class="row">
+              <div class="mb-3 w-50">
+                <label>Edit Date</label>
+                <input
+                  id="edit_date"
+                  name="date"
+                  type="date"
+                  class="form-control"
+                  placeholder="Enter Date"
+                />
+              </div>
+              <div class="mb-3 w-50">
+                <label>Edit Time</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  id="edit_time"
+                  name="time"
+                  placeholder="Enter Time"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="btn mt-3 pull-right"
+              style="background-color: #6fd943; color: #fff"
+            >
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+ $(document).ready(function () {
+    $("#example").DataTable();
+  });
+
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  var addsliderform = $("#addnewslider");
+
+  addsliderform.on("submit", addslidersubmitHandler);
+
+  function addslidersubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    let formData = $("form");
+    let data = {
+      user_id: $("#user_id").val(),
+      trainer_id: $("#trainer_id").val(),
+      link: $("#link").val(),
+      date: $("#date").val(),
+      time: $("#time").val(),
+      meeting_id: $("#meeting_id").val(),
+      meeting_password: $("#meeting_password").val(),
+    };
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/classes/add",
+      data: JSON.stringify(data),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+
+  $(document).on("click", "#edit_btn", function (e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#edit").modal("show");
+    var data = finalData;
+    $("#editid").val(data._id);
+    $("#edit_user_id").val(data.user_id._id);
+    $("#edit_trainer_id").val(data.trainer_id._id);
+    $("#edit_link").val(data.link);
+    $("#edit_date").val(data.date);
+    $("#edit_time").val(data.time);
+    $("#edit_meeting_id").val(data.meeting_id);
+    $("#edit_meeting_password").val(data.meeting_password);
+  });
+
+  var editform = $("#editform");
+  editform.on("submit", editSubmitHandler);
+
+  function editSubmitHandler(e) {
+    e.preventDefault();
+
+    var formData = getFormData(editform);
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/classes/edit",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+
+  function deleteslider(id) {
+    // $(document).on("click", "#delete_btn", function (e) {
+    if (confirm("Do you really want to delete this record")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/classes/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>

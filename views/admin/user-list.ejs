@@ -1,0 +1,223 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <!--  Users Start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Users</h4>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead class="t-head">
+                        <tr class="text-center">
+                          <th>S.NO</th>
+                          <th>Image</th>
+                          <th>Name</th>
+                          <th>Mobile</th>
+                          <th>Date of Birth</th>
+                          <th>State of Residence</th>
+                          <th>Test Sheet</th>
+                          <th>Status</th>
+                          <th>Created At</th>
+                        </tr>
+                      </thead>
+
+                      <tbody class="text-center"]>
+                        <% if(!recordData[0]) { %>
+                        <tr>
+                          <td colspan="100%">No Data</td>
+                        </tr>
+                        <% } else {%> <% recordData.forEach(function(recordData,index){ %>
+                        <tr>
+                          <td><%= index+1 %></td>
+                          <td>
+                            <img
+                              alt="file"
+                              src=<%= recordData.image %>
+                              height="50px"
+                              width="50px"
+                            />
+                          </td>
+
+                          <td>
+                            <a href="/admin/users/details/<%= recordData._id %>"><%= recordData.name %> </a>
+                          </td>
+                          <td><%= recordData.contactNumber %></td>
+                          <td><%= recordData.dateOfBirth %></td>
+                          <td><%= recordData.stateOfResidence %></td>
+                          <td>
+                            <%if(recordData.test) { %>
+                            <button class="btn bg-blue">
+                            <a href="<%= recordData.test %>">Download</a> </button>
+                            <% } else { %>
+                              Not Submitted
+                            <% } %>
+                          <td>
+                            <button
+                              class="btn <%- recordData.approved ? 'bg-success' : 'bg-danger' %> text-white"
+                              data-toggle="modal"
+                              data-model="<%= JSON.stringify(recordData) %>"
+                              id="accept_btn"
+                              style="cursor: pointer"
+                            >
+                              <%- recordData.approved ? 'Active' : 'Inactive' %></button
+                            >
+                          </td>
+                          <td>
+                            <%= convertTimeStampToDate(recordData.created_at) %>
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Users Ends -->
+    </div>
+  </section>
+  <!-- Approved -->
+  <div class="modal fade" id="action">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="actionForm" class="mx-5">
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Action</h4>
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="mb-3">
+              <input
+                name="approved"
+                type="checkbox"
+                id="approved"
+                data-width="100%"
+                data-toggle="toggle"
+                data-on="Active"
+                data-off="InActive"
+                data-onstyle="success"
+                data-offstyle="danger"
+              />
+            </div>
+            <input name="id" type="hidden" id="actionid" name="actionid" />
+          </div>
+
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              close
+            </button>
+            <button type="submit" class="btn btn-success">save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Modal -->
+</div>
+
+<%
+function convertTimeStampToDate(date){
+   date = Number(date)
+      var d = new Date(date),
+         month = '' + (d.getMonth() + 1),
+         day = '' + d.getDate(),
+         year = d.getFullYear();
+
+   if (month.length < 2)
+   month = '0' + month;
+   if (day.length < 2)
+   day = '0' + day;
+   var date = new Date();
+   date.toLocaleDateString();
+
+   return [day, month, year].join('-');
+}
+%>
+<%- include ('partials/footer.ejs') %>
+<script>
+  $(document).on("click", "#accept_btn", function (e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#action").modal("show");
+    var data = finalData;
+    // console.log(data)
+
+    $("#actionid").val(data._id);
+
+    approved
+      ? $("#approved").bootstrapToggle("on")
+      : $("#approved").bootstrapToggle("off");
+  });
+</script>
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  var actionForm = $("#actionForm");
+  actionForm.on("submit", addslidersubmitHandler);
+
+  function addslidersubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = getFormData(actionForm);
+    formData.approved = $("#approved").is(":checked");
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/users/approved",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>

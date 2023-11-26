@@ -1,0 +1,266 @@
+<%- include('partials/header.ejs') %>
+<!-- Main Content -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Documents</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add Documents"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead>
+                        <tr class="text-center">
+                          <th>Type</th>
+                          <th>File</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-center">
+                        <% if(!document[0]) { %>
+                        <tr>
+                          <td colspan="100%">No Data</td>
+                        </tr>
+                        <% } else {%> <% document.forEach(function(document){ %>
+                        <tr>
+                          <td><%= document.type %></td>
+                          <td>
+                            <a
+                              href="/uploads/documents/<%= document.file %>"
+                              target="_blank"
+                              ><%= document.file %></a
+                            >
+                          </td>
+                          <td>
+                            <i
+                              class="btn btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deleteslider('<%= document._id %>');"
+                            ></i>
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add Documents</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form
+              id="addnewslider"
+              class="mx-5 form-group font-weight-bold showcursor: true"
+            >
+              <div class="mb-3">
+                <input
+                  type="hidden"
+                  value="<%= class_id %>"
+                  name="class_id"
+                  id="class_id"
+                />
+                <input
+                  type="file"
+                  class="form-control"
+                  id="image"
+                  name="image"
+                  accept="video/*,application/pdf, application/vnd.ms-excel"
+                />
+              </div>
+              <div class="mb-3">
+                <label>Type: </label>
+                <select
+                  class="form-control show-tick ms select2"
+                  data-placeholder="Select"
+                  id="type"
+                  name="type"
+                >
+                  <option value="" disabled selected>
+                    Select Document Type
+                  </option>
+                  <option value="pdf">PDF</option>
+                  <option value="video">Video</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                class="btn mt-3 pull-right"
+                style="background-color: #6fd943; color: #fff"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+
+  <!-- Modal body -->
+  <div class="modal fade" id="edit">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Edit Documents</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form id="editform" class="mx-5">
+            <input type="hidden" id="editid" name="editid" />
+            <div class="mb-3">
+              <label>Heading: </label>
+              <input
+                type="text"
+                class="form-control"
+                id="editheading"
+                name="editheading"
+              />
+            </div>
+            <div class="mb-3">
+              <label>Description: </label>
+              <input
+                type="text"
+                class="form-control"
+                id="editdescription"
+                name="editdescription"
+              />
+            </div>
+            <button
+              type="submit"
+              class="btn mt-3 pull-right"
+              style="background-color: #6fd943; color: #fff"
+            >
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+  $(document).ready(function () {
+    $("#example").DataTable();
+  });
+
+  var addsliderform = $("#addnewslider");
+
+  addsliderform.on("submit", addslidersubmitHandler);
+
+  function addslidersubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = new FormData(addsliderform[0]);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      enctype: "multipart/form-data",
+      processData: false,
+      contentType: false,
+      url: "/admin/classes/add_documents",
+      data: formData,
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+
+  function deleteslider(id) {
+    if (confirm("Do you really want to delete this record")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/classes/delete_documents",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>

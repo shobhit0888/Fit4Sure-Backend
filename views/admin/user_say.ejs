@@ -1,0 +1,310 @@
+<%- include('partials/header.ejs') %> <%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">User Say</h4>
+                <div class="head-right-btn">
+                  <button
+                    class="btn btn-sm btn-secondary float-right card-text-btn"
+                    type="submit"
+                    data-bs-toggle="modal"
+                    data-bs-target="#myModal"
+                  >
+                    <a
+                      href="#"
+                      data-ajax-popup="true"
+                      data-size="md"
+                      data-title="Invite New User"
+                      data-toggle="tooltip"
+                      title=""
+                      data-bs-original-title="Add user_say"
+                    >
+                      Add
+                    </a>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead>
+                        <tr>
+                          <th>Title</th>
+                          <th>Description</th>
+                          <th>created at</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% if(!user_say[0]) { %>
+                        <tr>
+                          <td colspan="100%" class="text-center">
+                            No user_say
+                          </td>
+                        </tr>
+                        <% } else {%> <% user_say.forEach(function(user_say){ %>
+                        <tr>
+                          <td><%= user_say.title %></td>
+
+                          <td><%= user_say.description %></td>
+                          <td><%= user_say.created_at %></td>
+                          <td
+                            class="d-flex justify-content-between align-center"
+                          >
+                            <i
+                              class="btn-info btn-lg fas fa-edit"
+                              id="edit_btn"
+                              data-toggle="modal"
+                              data-model="<%= JSON.stringify(user_say) %>"
+                            ></i>
+                            <i
+                              class="btn-danger btn-lg fas fa-trash-alt"
+                              onclick="deleteuser_say('<%= user_say._id %>');"
+                            ></i>
+                          </td>
+                        </tr>
+                        <% }); %> <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="body">
+          <div class="modal-body">
+            <form
+              id="addnewuser_say"
+              class="mx-5 form-group font-weight-bold showcursor: true"
+            >
+              <div class="form-data mb-3">
+                <label for="name">Title</label>
+                <input
+                  type="text"
+                  name="title"
+                  id="title"
+                  class="form-control"
+                  placeholder="Enter title"
+                />
+              </div>
+              <div class="form-data mb-3">
+                <label for="name">Description</label>
+                <textarea
+                  type="text"
+                  name="description"
+                  id="description"
+                  class="form-control"
+                  placeholder="Enter description"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                class="btn mt-3 pull-right"
+                style="background-color: #6fd943; color: #fff"
+              >
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="col-md-12 modal-footer"></div>
+        </div>
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+
+  <!-- Modal body -->
+  <div class="modal fade" id="edit">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Edit user_say</h4>
+          <button type="button" class="close" data-dismiss="modal">
+            &times;
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <form
+            id="editform"
+            class="mx-5 form-group font-weight-bold showcursor: true"
+          >
+            <input type="hidden" id="editid" name="editid" />
+
+            <div class="form-data mb-3">
+              <label for="name">Title</label>
+              <input
+                type="text"
+                name="edittitle"
+                id="edittitle"
+                class="form-control"
+                placeholder="Enter title"
+              />
+            </div>
+            <div class="form-data mb-3">
+              <label for="name">Description</label>
+              <input
+                type="text"
+                name="editdescription"
+                id="editdescription"
+                class="form-control"
+                placeholder="Enter description"
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="btn mt-3 pull-right"
+              style="background-color: #6fd943; color: #fff"
+            >
+              Save
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+  $(document).ready(function () {
+    $("#example").DataTable();
+  });
+
+  var adduser_sayform = $("#addnewuser_say");
+
+  adduser_sayform.on("submit", adduser_sayubmitHandler);
+
+  function adduser_sayubmitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    var formData = getFormData($(adduser_sayform));
+    console.log(formData);
+    // DO POST
+
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/user_say/add",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+
+  function deleteuser_say(id) {
+    if (confirm("Do you really want to delete this user_say")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/user_say/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+
+  $(document).on("click", "#edit_btn", function (e) {
+    let getData = $(e.target).attr("data-model");
+    let finalData = JSON.parse(getData);
+    $("#edit").modal("show");
+    var data = finalData;
+    $("#editid").val(data._id);
+    $("#edittitle").val(data.title);
+    $("#editdescription").val(data.description);
+  });
+
+  var editform = $("#editform");
+  editform.on("submit", editSubmitHandler);
+
+  function editSubmitHandler(e) {
+    e.preventDefault();
+
+    var formData = getFormData(editform);
+    console.log(formData);
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/user_say/edit",
+      data: JSON.stringify(formData),
+    })
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>

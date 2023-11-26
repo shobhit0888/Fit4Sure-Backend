@@ -1,0 +1,53 @@
+<%- include("partials/header.ejs") %>
+
+<!-- <section class="container-fluid plans-section">
+  <p class="plans-heading"><%= web_service_title %></p>
+  <p class="plans-heading-bottom"><%= web_service_description %></p>
+  <div class="container blank-container2">
+    <div class="row">
+      <div class="col-md-2">
+        <div class="service-box-container">
+          <div class="service-box">
+            <div class="empty-box">
+              <img
+                src="/uploads/Web_services/<%= web_services.image %>"
+                alt="empty-box"
+                class="empty-box-img"
+                width="208px"
+                height="208px"
+                style="border-radius: 19.8246px"
+              />
+            </div>
+            <p><%= web_services.title ? web_services.title : "" %></p>
+            <p><%= web_services.description ? web_services.description : "" %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section> -->
+<section class="hero-section">
+  <div class="hero-section-container">
+    <div class="content-container">
+      <h1 class="content-heading">
+        <%= web_services.title ? web_services.title : "" %>
+      </h1>
+      <p class="content-container-text">
+        <%= web_services.description ? web_services.description : "" %>
+      </p>
+    </div>
+    <div class="service-box">
+      <div class="empty-box">
+        <img
+          src="/uploads/Web_services/<%= web_services.image %>"
+          alt="empty-box"
+          class="empty-box-img"
+          width="208px"
+          height="208px"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>

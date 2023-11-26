@@ -1,0 +1,67 @@
+<%- include('partials/header.ejs') %>
+
+<!-- content start -->
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <!--  Start-->
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Post Comments</h4>
+              </div>
+            </div>
+
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <div class="table-responsive p-2">
+                    <table class="table table-bordered table-md">
+                      <thead class="t-head">
+                        <tr>
+                          <th>S.No</th>
+                          <th>User</th>
+                          <th>Post</th>
+                          <th>Comment</th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        <% if(!posts[0]){%>
+                        <tr>
+                          <td colspan="4">No posts found</td>
+                        </tr>
+                        <% } else { posts.forEach(function(post){ %> <%
+                        {post?.comments.forEach(function(comment,index){ %>
+                        <tr>
+                          <td><%= index+1%></td>
+                          <td><%= comment.user.name%></td>
+                          <td><%= post.text %></td>
+                          <td><%= comment.text %></td>
+                        </tr>
+                        <% }); } %> 
+                  <tr>
+
+                  </tr>
+                        <% }); } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Ends -->
+    </div>
+  </section>
+</div>
+<!-- Main Content -->
+
+<%- include ('partials/footer.ejs') %>

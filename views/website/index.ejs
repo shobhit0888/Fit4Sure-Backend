@@ -1,0 +1,1013 @@
+<%- include("partials/header.ejs") %>
+
+<section class="hero-section">
+  <div class="hero-section-container">
+    <% web_slider.forEach(e => { %>
+
+    <div class="content-container">
+      <h1 class="content-heading"><%= e.title %></h1>
+      <p class="content-container-text"><%= e.description %></p>
+      <div></div>
+      <a href="<%= e.link %> ">
+        <button class="get-started-btn">
+          <p>Get Started</p>
+          <img src="/website/assets/images/arrow-left-thin.svg" alt="arrow" />
+        </button>
+      </a>
+    </div>
+
+    <div class="img-container">
+      <img
+        class="img-fluid img-back"
+        src="/website/assets/images/image 20.png"
+        alt="image19"
+      />
+      <img
+        class="img-fluid img-front"
+        src="/uploads/web_slider/<%= e.image %>"
+        alt="image19"
+      />
+    </div>
+    <% }) %>
+  </div>
+  <div class="rect4245">
+    <img src="/website/assets/images/Rectangle 4245.svg" alt="rect4245" />
+  </div>
+  <div class="rect4246">
+    <img src="/website/assets/images/Rectangle 4246.svg" alt="rect4246" />
+  </div>
+  <div class="rect4225">
+    <img src="/website/assets/images/Rectangle 4225.svg" alt="rect4225" />
+  </div>
+  <div class="rect4226">
+    <img src="/website/assets/images/Rectangle 4226.svg" alt="rect4226" />
+  </div>
+  <div class="plant-img">
+    <img src="/website/assets/images/Group 12324.svg" alt="plant-img" />
+  </div>
+</section>
+
+<div class="container-fluid message-container">
+  <div><%= food_type_title %></div>
+  <div></div>
+</div>
+
+<section class="container-fluid features-section">
+  <div class="features-box gap-lg-5">
+    <div class="features-list-container">
+      <!-- <div class="row">
+              <button type="button" class="btn btn-outline-secondary clo-12" style="width: 250px;"></button> 
+            </div> -->
+
+      <div
+        class="btn-group-vertical"
+        style="width: 400px"
+        role="group"
+        aria-label="Basic radio toggle button group"
+      >
+        <% food_type.forEach(e => { %>
+        <input
+          type="radio"
+          class="btn-check FoodID"
+          name="btnradio"
+          id="<%= e._id %>"
+          autocomplete="off"
+          data-id="<%= e._id %>"
+          checked
+        />
+        <label class="btn btn-outline-secondary mb-3 p-3" for="<%= e._id %>">
+          <b><%= e.food_name %></b>
+        </label>
+        <% }) %>
+      </div>
+    </div>
+    <div class="feature-images-container">
+      <div class="" id="search-list"></div>
+    </div>
+  </div>
+  <button class="schedule-meeting-button">Schedule a meeting</button>
+</section>
+<% web_testimonials.forEach(e => { %>
+
+<section class="problem-question-section">
+  <div class="question-box">
+    <div class="question-area"><%= e.title %></div>
+    <div class="answer-area">
+      <div><%= e.sub_title %></div>
+      <div><%= e.description %></div>
+      <a href="<%= e.link %> "></a>
+      <!-- <div class="arrow-left-box">
+            <img
+              class="arrow-left"
+              src="./images/arrow-right-thin.svg"
+              alt="arrow-left"
+            />
+          </div> -->
+    </div>
+  </div>
+
+  <div class="thinking-img-box">
+    <img
+      class="thinking-img"
+      src="/uploads/web_testimonials/<%= e.image %>"
+      alt="thinking"
+    />
+  </div>
+  <!-- <div class="arrow-right-box">
+        <img
+          class="arrow-right"
+          src="./images/arrow-right-thin (1).svg"
+          alt="arrow-right"
+        />
+      </div> -->
+</section>
+<% }) %>
+
+<section class="steps-section container-fluid">
+  <% counting.forEach(e => { %>
+
+  <div class="step-box">
+    <div class="digit">1</div>
+    <div class="white-line"></div>
+    <div class="steps-info"><%= e.col_one %></div>
+  </div>
+
+  <div class="next-step">
+    <img
+      class="next-step-img"
+      src="/website/assets/images//Group 12223.svg"
+      alt="next-step"
+    />
+  </div>
+
+  <div class="step-box">
+    <div class="digit">2</div>
+    <div class="white-line"></div>
+    <div class="steps-info"><%= e.col_two %></div>
+  </div>
+
+  <div class="next-step">
+    <img
+      class="next-step-img"
+      src="/website/assets/images//Group 12223.svg"
+      alt="next-step"
+    />
+  </div>
+
+  <div class="step-box">
+    <div class="digit">3</div>
+    <div class="white-line"></div>
+    <div class="steps-info"><%= e.col_three %></div>
+  </div>
+
+  <div class="next-step">
+    <img
+      class="next-step-img"
+      src="/website/assets/images//Group 12223.svg"
+      alt="next-step"
+    />
+  </div>
+
+  <div class="step-box">
+    <div class="digit">4</div>
+    <div class="white-line"></div>
+    <div class="steps-info"><%= e.col_four %></div>
+  </div>
+
+  <div class="steps-intro">
+    <div>
+      <p class="steps-intro-heading"><%= steps_title %></p>
+    </div>
+    <div>
+      <p class="intro-desc"><%= steps_description %></p>
+    </div>
+  </div>
+  <% }) %>
+</section>
+
+<section class="consult-box-section">
+  <div class="apps__container container-fluid">
+    <div class="google-play">
+      <img
+        class="app__image img-fluid"
+        src="/website/assets/images/Google Play.svg"
+        alt="google-play"
+      />
+    </div>
+
+    <div class="horizontal-line"></div>
+
+    <div class="app-store">
+      <img
+        class="app__image img-fluid"
+        src="/website/assets/images/App Store.svg"
+        alt="app-store"
+      />
+    </div>
+  </div>
+  <% talk_to_expert.forEach(e => { %>
+
+  <div class="consult__box-container container-fluid">
+    <p class="timing__text">16 weeks is all you need….</p>
+    <div class="consult-box">
+      <div class="consult-box-top"><%= e.title %></div>
+      <div class="consult-box-bottom">
+        <p class="consult-box-text"><%= e.description %></p>
+        <p class="consult-box-text">
+          <%= e.description2 %>
+          <strong style="color: #2e0132"></strong>
+        </p>
+        <a href="<%= e.export %> ">
+          <button>
+            <p>Talk to expert</p>
+            <img src="/website/assets/images/phone.svg" alt="phone" />
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+  <% }) %>
+</section>
+
+<section class="container-fluid plans-section">
+  <p class="plans-heading"><%= web_service_title %></p>
+  <p class="plans-heading-bottom"><%= web_service_description %></p>
+
+  <div class="container blank-container">
+    <div class="service-box-container">
+      <div class="service-box">
+        <div class="empty-box">
+          <img
+            src="/uploads/Web_services/<%= web_services_image1 ? web_services_image1 : "" %>"
+            alt="empty-box"
+            class="empty-box-img"
+            width="208px"
+            height="208px"
+            style="border-radius: 19.8246px"
+          />
+        </div>
+        <p><%= web_services[0].title ? web_services[0].title : "" %></p>
+      </div>
+      <div class="service-box">
+        <div class="empty-box">
+          <img
+            src="/uploads/Web_services/<%= web_services_image2 ? web_services_image2 : "" %>"
+            alt="empty-box"
+            class="empty-box-img"
+            width="208px"
+            height="208px"
+            style="border-radius: 19.8246px"
+          />
+        </div>
+        <p><%= web_services[1].title ? web_services[1].title : "" %></p>
+      </div>
+      <div class="service-box">
+        <div class="empty-box">
+          <img
+            src="/uploads/Web_services/<%= web_services_image3 ? web_services_image3 : "" %>"
+            alt="empty-box"
+            class="empty-box-img"
+            width="208px"
+            height="208px"
+            style="border-radius: 19.8246px"
+          />
+        </div>
+        <p><%= web_services[2].title ? web_services[2].title : "" %></p>
+      </div>
+      <div class="service-box">
+        <div class="empty-box">
+          <img
+            src="/uploads/Web_services/<%= web_services_image4 ? web_services_image4 : "" %>"
+            alt="empty-box"
+            class="empty-box-img"
+            width="208px"
+            height="208px"
+            style="border-radius: 19.8246px"
+          />
+        </div>
+        <p><%= web_services[3].title ? web_services[3].title : "" %></p>
+      </div>
+      <div class="service-box">
+        <div class="empty-box">
+          <img
+            src="/uploads/Web_services/<%= web_services_image5 ? web_services_image5 : "" %>"
+            alt="empty-box"
+            class="empty-box-img"
+            width="208px"
+            height="208px"
+            style="border-radius: 19.8246px"
+          />
+        </div>
+        <p><%= web_services[4].title ? web_services[4].title : "" %></p>
+      </div>
+      <div class="service-box">
+        <div class="empty-box">
+          <img
+            src="/uploads/Web_services/<%= web_services_image6 ? web_services_image6 : "" %>"
+            alt="empty-box"
+            class="empty-box-img"
+            width="208px"
+            height="208px"
+            style="border-radius: 19.8246px"
+          />
+        </div>
+        <p><%= web_services[5].title ? web_services[5].title : "" %></p>
+      </div>
+    </div>
+    <div class="button-container">
+      <a href="/website/services"
+        ><button class="schedule-meeting-button">
+          View all plans & services
+        </button></a
+      >
+    </div>
+  </div>
+</section>
+
+<section class="facilities-section">
+  <p class="whats-sets-our-app-apart">What sets our app apart</p>
+  <div class="container facilities">
+    <% web_apart.forEach(e => { %>
+
+    <div class="facilities-box-container">
+      <div class="facility-img-container">
+        <img
+          src="/uploads/Web_apart/<%= e.image %>"
+          alt="facility-img"
+          class="facility-img"
+        />
+      </div>
+      <div class="yellow-horizontal-line"></div>
+      <p class="facility-info"><%= e.description %></p>
+    </div>
+    <% }) %>
+  </div>
+</section>
+
+<section class="issue-section container">
+  <div class="issue-reason-box">
+    <p>
+      In the past two years, we have witnessed
+      <strong style="color: #2e0132">increasing mortality</strong> rates in
+      India due to <strong style="font-size: 20px">heart attacks.</strong>
+    </p>
+    <p>What do you think is the reason?</p>
+    <div></div>
+    <p>
+      A survey states that <strong>64 percent</strong> of Indians
+      <strong style="font-size: 20px">do not exercise.</strong>
+    </p>
+    <p>
+      At Fitsure, we understand that fitness is a mindset. We have introduced a
+      revolution to change your psychology to make you live healthier and longer
+      lives!
+    </p>
+  </div>
+</section>
+
+<section class="faq-section container">
+  <p class="faq-heading">FAQ</p>
+  <% web_Faq.forEach(e => { %>
+  <div class="accordions__container-list">
+    <div class="accordion__container">
+      <button class="accordion"><%= e.title %></button>
+      <div class="panel">
+        <p><%= e.description %></p>
+      </div>
+    </div>
+  </div>
+  <% }) %>
+</section>
+
+<section class="qnaSection container">
+  <% view_full_answer.forEach(e => { %>
+
+  <div class="qnaBox">
+    <p class="ques-text"><%= e.title %></p>
+    <div></div>
+    <p class="student-name"><%= e.sub_title %></p>
+    <p class="sample-answer"><%= e.description %></p>
+    <button>View full answer</button>
+  </div>
+  <% }) %>
+</section>
+
+<div class="getACallBox container">
+  <div class="gacBox-img-container">
+    <img src="/website/assets/images/Frame.png" alt="frame" class="frame-img" />
+  </div>
+  <div class="gacBox-content">
+    <p>Facing similar kinds of issues?</p>
+    <p>
+      We understand that old habits die hard and psychology is difficult to
+      change.
+    </p>
+    <p>
+      Consult our professionals once. They will positively transform you by
+      mindful weight loss techniques, improving your relationship with food, not
+      forcing you to stop your favourite meals, customizing your nutrition and
+      scheduling, making you do the exercises you love, provide one-on-one
+      coaching, provide help from support groups, and SOS plans.
+    </p>
+    <form>
+      <input type="text" />
+      <button type="submit">Get a call</button>
+    </form>
+  </div>
+</div>
+
+<p class="testimonial-heading">What Fit4sure users are saying</p>
+
+<section class="testimonial-section container-fluid">
+  <div class="container text-center my-3">
+    <div class="row mx-auto my-auto justify-content-center">
+      <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner" role="listbox">
+          <div class="carousel-item active">
+            <% user_say.forEach(e => { %>
+            <div class="col-md-3">
+              <div class="card">
+                <div class="slider-content-box">
+                  <p><%= e.description %></p>
+                  <p><%= e.title %></p>
+                </div>
+              </div>
+            </div>
+            <% }) %>
+          </div>
+        </div>
+        <a
+          class="carousel-control-prev bg-transparent w-aut"
+          href="#recipeCarousel"
+          role="button"
+          data-bs-slide="prev"
+        >
+          <span class="carousel-control-prev-icon" aria-hidden="true">
+            <img src="/website/assets/images/arrow-right-thin.svg" alt="" />
+          </span>
+        </a>
+        <a
+          class="carousel-control-next bg-transparent w-aut"
+          href="#recipeCarousel"
+          role="button"
+          data-bs-slide="next"
+        >
+          <span class="carousel-control-next-icon" aria-hidden="true">
+            <img src="/website/assets/images/arrow-right-thin (1).svg" alt="" />
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="success-stories-section container">
+  <p class="success-stories-heading"><%= transformation_title %></p>
+  <p class="success-stories-desc"><%= transformation_description %></p>
+  <% transformations.forEach(e => { %>
+  <div class="stories-picture-container container">
+    <div class="people-image-container">
+      <div class="pic-top-part">
+        <div class="pic-ppl-img-container">
+          <img
+            src="/uploads/transformations/<%= e.before_image %>"
+            height="315px"
+            alt="person"
+          />
+        </div>
+      </div>
+      <div class="pic-bottom-part"></div>
+    </div>
+
+    <div class="people-image-container">
+      <div class="pic-top-part">
+        <div class="pic-ppl-img-container">
+          <img
+            src="/uploads/transformations/<%= e.after_image %>"
+            height="315px"
+            alt="person"
+          />
+        </div>
+      </div>
+      <div class="pic-bottom-part"></div>
+    </div>
+  </div>
+  <% }) %>
+</section>
+
+<section class="form-section container">
+  <div class="form-container">
+    <form id="addform">
+      <main class="main-form-inputs">
+        <section>
+          <label for="name">Name<sup>*</sup></label>
+          <input
+            id="name"
+            name="contact_name"
+            type="text"
+            autocomplete="off"
+            required
+            placeholder="Enter your name"
+          />
+        </section>
+        <section>
+          <label for="email">Email<sup>*</sup></label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autocomplete="username"
+            placeholder="Enter your email"
+            required
+          />
+        </section>
+        <section>
+          <label for="country">Country<sup>*</sup></label>
+          <select name="country" class="country-select" id="country">
+            <option value="0" label="Choose a country ... " selected="selected">
+              Choose a country ...
+            </option>
+            <optgroup id="country-optgroup-Africa" label="Africa">
+              <option value="DZ" label="Algeria">Algeria</option>
+              <option value="AO" label="Angola">Angola</option>
+              <option value="BJ" label="Benin">Benin</option>
+              <option value="BW" label="Botswana">Botswana</option>
+              <option value="BF" label="Burkina Faso">Burkina Faso</option>
+              <option value="BI" label="Burundi">Burundi</option>
+              <option value="CM" label="Cameroon">Cameroon</option>
+              <option value="CV" label="Cape Verde">Cape Verde</option>
+              <option value="CF" label="Central African Republic">
+                Central African Republic
+              </option>
+              <option value="TD" label="Chad">Chad</option>
+              <option value="KM" label="Comoros">Comoros</option>
+              <option value="CG" label="Congo - Brazzaville">
+                Congo - Brazzaville
+              </option>
+              <option value="CD" label="Congo - Kinshasa">
+                Congo - Kinshasa
+              </option>
+              <option value="CI" label="Côte d'Ivoire">Côte d'Ivoire</option>
+              <option value="DJ" label="Djibouti">Djibouti</option>
+              <option value="EG" label="Egypt">Egypt</option>
+              <option value="GQ" label="Equatorial Guinea">
+                Equatorial Guinea
+              </option>
+              <option value="ER" label="Eritrea">Eritrea</option>
+              <option value="ET" label="Ethiopia">Ethiopia</option>
+              <option value="GA" label="Gabon">Gabon</option>
+              <option value="GM" label="Gambia">Gambia</option>
+              <option value="GH" label="Ghana">Ghana</option>
+              <option value="GN" label="Guinea">Guinea</option>
+              <option value="GW" label="Guinea-Bissau">Guinea-Bissau</option>
+              <option value="KE" label="Kenya">Kenya</option>
+              <option value="LS" label="Lesotho">Lesotho</option>
+              <option value="LR" label="Liberia">Liberia</option>
+              <option value="LY" label="Libya">Libya</option>
+              <option value="MG" label="Madagascar">Madagascar</option>
+              <option value="MW" label="Malawi">Malawi</option>
+              <option value="ML" label="Mali">Mali</option>
+              <option value="MR" label="Mauritania">Mauritania</option>
+              <option value="MU" label="Mauritius">Mauritius</option>
+              <option value="YT" label="Mayotte">Mayotte</option>
+              <option value="MA" label="Morocco">Morocco</option>
+              <option value="MZ" label="Mozambique">Mozambique</option>
+              <option value="NA" label="Namibia">Namibia</option>
+              <option value="NE" label="Niger">Niger</option>
+              <option value="NG" label="Nigeria">Nigeria</option>
+              <option value="RW" label="Rwanda">Rwanda</option>
+              <option value="RE" label="Réunion">Réunion</option>
+              <option value="SH" label="Saint Helena">Saint Helena</option>
+              <option value="SN" label="Senegal">Senegal</option>
+              <option value="SC" label="Seychelles">Seychelles</option>
+              <option value="SL" label="Sierra Leone">Sierra Leone</option>
+              <option value="SO" label="Somalia">Somalia</option>
+              <option value="ZA" label="South Africa">South Africa</option>
+              <option value="SD" label="Sudan">Sudan</option>
+              <option value="SZ" label="Swaziland">Swaziland</option>
+              <option value="ST" label="São Tomé and Príncipe">
+                São Tomé and Príncipe
+              </option>
+              <option value="TZ" label="Tanzania">Tanzania</option>
+              <option value="TG" label="Togo">Togo</option>
+              <option value="TN" label="Tunisia">Tunisia</option>
+              <option value="UG" label="Uganda">Uganda</option>
+              <option value="EH" label="Western Sahara">Western Sahara</option>
+              <option value="ZM" label="Zambia">Zambia</option>
+              <option value="ZW" label="Zimbabwe">Zimbabwe</option>
+            </optgroup>
+            <optgroup id="country-optgroup-Americas" label="Americas">
+              <option value="AI" label="Anguilla">Anguilla</option>
+              <option value="AG" label="Antigua and Barbuda">
+                Antigua and Barbuda
+              </option>
+              <option value="AR" label="Argentina">Argentina</option>
+              <option value="AW" label="Aruba">Aruba</option>
+              <option value="BS" label="Bahamas">Bahamas</option>
+              <option value="BB" label="Barbados">Barbados</option>
+              <option value="BZ" label="Belize">Belize</option>
+              <option value="BM" label="Bermuda">Bermuda</option>
+              <option value="BO" label="Bolivia">Bolivia</option>
+              <option value="BR" label="Brazil">Brazil</option>
+              <option value="VG" label="British Virgin Islands">
+                British Virgin Islands
+              </option>
+              <option value="CA" label="Canada">Canada</option>
+              <option value="KY" label="Cayman Islands">Cayman Islands</option>
+              <option value="CL" label="Chile">Chile</option>
+              <option value="CO" label="Colombia">Colombia</option>
+              <option value="CR" label="Costa Rica">Costa Rica</option>
+              <option value="CU" label="Cuba">Cuba</option>
+              <option value="DM" label="Dominica">Dominica</option>
+              <option value="DO" label="Dominican Republic">
+                Dominican Republic
+              </option>
+              <option value="EC" label="Ecuador">Ecuador</option>
+              <option value="SV" label="El Salvador">El Salvador</option>
+              <option value="FK" label="Falkland Islands">
+                Falkland Islands
+              </option>
+              <option value="GF" label="French Guiana">French Guiana</option>
+              <option value="GL" label="Greenland">Greenland</option>
+              <option value="GD" label="Grenada">Grenada</option>
+              <option value="GP" label="Guadeloupe">Guadeloupe</option>
+              <option value="GT" label="Guatemala">Guatemala</option>
+              <option value="GY" label="Guyana">Guyana</option>
+              <option value="HT" label="Haiti">Haiti</option>
+              <option value="HN" label="Honduras">Honduras</option>
+              <option value="JM" label="Jamaica">Jamaica</option>
+              <option value="MQ" label="Martinique">Martinique</option>
+              <option value="MX" label="Mexico">Mexico</option>
+              <option value="MS" label="Montserrat">Montserrat</option>
+              <option value="AN" label="Netherlands Antilles">
+                Netherlands Antilles
+              </option>
+              <option value="NI" label="Nicaragua">Nicaragua</option>
+              <option value="PA" label="Panama">Panama</option>
+              <option value="PY" label="Paraguay">Paraguay</option>
+              <option value="PE" label="Peru">Peru</option>
+              <option value="PR" label="Puerto Rico">Puerto Rico</option>
+              <option value="BL" label="Saint Barthélemy">
+                Saint Barthélemy
+              </option>
+              <option value="KN" label="Saint Kitts and Nevis">
+                Saint Kitts and Nevis
+              </option>
+              <option value="LC" label="Saint Lucia">Saint Lucia</option>
+              <option value="MF" label="Saint Martin">Saint Martin</option>
+              <option value="PM" label="Saint Pierre and Miquelon">
+                Saint Pierre and Miquelon
+              </option>
+              <option value="VC" label="Saint Vincent and the Grenadines">
+                Saint Vincent and the Grenadines
+              </option>
+              <option value="SR" label="Suriname">Suriname</option>
+              <option value="TT" label="Trinidad and Tobago">
+                Trinidad and Tobago
+              </option>
+              <option value="TC" label="Turks and Caicos Islands">
+                Turks and Caicos Islands
+              </option>
+              <option value="VI" label="U.S. Virgin Islands">
+                U.S. Virgin Islands
+              </option>
+              <option value="US" label="United States">United States</option>
+              <option value="UY" label="Uruguay">Uruguay</option>
+              <option value="VE" label="Venezuela">Venezuela</option>
+            </optgroup>
+            <optgroup id="country-optgroup-Asia" label="Asia">
+              <option value="AF" label="Afghanistan">Afghanistan</option>
+              <option value="AM" label="Armenia">Armenia</option>
+              <option value="AZ" label="Azerbaijan">Azerbaijan</option>
+              <option value="BH" label="Bahrain">Bahrain</option>
+              <option value="BD" label="Bangladesh">Bangladesh</option>
+              <option value="BT" label="Bhutan">Bhutan</option>
+              <option value="BN" label="Brunei">Brunei</option>
+              <option value="KH" label="Cambodia">Cambodia</option>
+              <option value="CN" label="China">China</option>
+              <option value="GE" label="Georgia">Georgia</option>
+              <option value="HK" label="Hong Kong SAR China">
+                Hong Kong SAR China
+              </option>
+              <option value="IN" label="India">India</option>
+              <option value="ID" label="Indonesia">Indonesia</option>
+              <option value="IR" label="Iran">Iran</option>
+              <option value="IQ" label="Iraq">Iraq</option>
+              <option value="IL" label="Israel">Israel</option>
+              <option value="JP" label="Japan">Japan</option>
+              <option value="JO" label="Jordan">Jordan</option>
+              <option value="KZ" label="Kazakhstan">Kazakhstan</option>
+              <option value="KW" label="Kuwait">Kuwait</option>
+              <option value="KG" label="Kyrgyzstan">Kyrgyzstan</option>
+              <option value="LA" label="Laos">Laos</option>
+              <option value="LB" label="Lebanon">Lebanon</option>
+              <option value="MO" label="Macau SAR China">
+                Macau SAR China
+              </option>
+              <option value="MY" label="Malaysia">Malaysia</option>
+              <option value="MV" label="Maldives">Maldives</option>
+              <option value="MN" label="Mongolia">Mongolia</option>
+              <option value="MM" label="Myanmar [Burma]">
+                Myanmar [Burma]
+              </option>
+              <option value="NP" label="Nepal">Nepal</option>
+              <option value="NT" label="Neutral Zone">Neutral Zone</option>
+              <option value="KP" label="North Korea">North Korea</option>
+              <option value="OM" label="Oman">Oman</option>
+              <option value="PK" label="Pakistan">Pakistan</option>
+              <option value="PS" label="Palestinian Territories">
+                Palestinian Territories
+              </option>
+              <option value="YD" label="People's Democratic Republic of Yemen">
+                People's Democratic Republic of Yemen
+              </option>
+              <option value="PH" label="Philippines">Philippines</option>
+              <option value="QA" label="Qatar">Qatar</option>
+              <option value="SA" label="Saudi Arabia">Saudi Arabia</option>
+              <option value="SG" label="Singapore">Singapore</option>
+              <option value="KR" label="South Korea">South Korea</option>
+              <option value="LK" label="Sri Lanka">Sri Lanka</option>
+              <option value="SY" label="Syria">Syria</option>
+              <option value="TW" label="Taiwan">Taiwan</option>
+              <option value="TJ" label="Tajikistan">Tajikistan</option>
+              <option value="TH" label="Thailand">Thailand</option>
+              <option value="TL" label="Timor-Leste">Timor-Leste</option>
+              <option value="TR" label="Turkey">Turkey</option>
+              <option value="TM" label="Turkmenistan">Turkmenistan</option>
+              <option value="AE" label="United Arab Emirates">
+                United Arab Emirates
+              </option>
+              <option value="UZ" label="Uzbekistan">Uzbekistan</option>
+              <option value="VN" label="Vietnam">Vietnam</option>
+              <option value="YE" label="Yemen">Yemen</option>
+            </optgroup>
+            <optgroup id="country-optgroup-Europe" label="Europe">
+              <option value="AL" label="Albania">Albania</option>
+              <option value="AD" label="Andorra">Andorra</option>
+              <option value="AT" label="Austria">Austria</option>
+              <option value="BY" label="Belarus">Belarus</option>
+              <option value="BE" label="Belgium">Belgium</option>
+              <option value="BA" label="Bosnia and Herzegovina">
+                Bosnia and Herzegovina
+              </option>
+              <option value="BG" label="Bulgaria">Bulgaria</option>
+              <option value="HR" label="Croatia">Croatia</option>
+              <option value="CY" label="Cyprus">Cyprus</option>
+              <option value="CZ" label="Czech Republic">Czech Republic</option>
+              <option value="DK" label="Denmark">Denmark</option>
+              <option value="DD" label="East Germany">East Germany</option>
+              <option value="EE" label="Estonia">Estonia</option>
+              <option value="FO" label="Faroe Islands">Faroe Islands</option>
+              <option value="FI" label="Finland">Finland</option>
+              <option value="FR" label="France">France</option>
+              <option value="DE" label="Germany">Germany</option>
+              <option value="GI" label="Gibraltar">Gibraltar</option>
+              <option value="GR" label="Greece">Greece</option>
+              <option value="GG" label="Guernsey">Guernsey</option>
+              <option value="HU" label="Hungary">Hungary</option>
+              <option value="IS" label="Iceland">Iceland</option>
+              <option value="IE" label="Ireland">Ireland</option>
+              <option value="IM" label="Isle of Man">Isle of Man</option>
+              <option value="IT" label="Italy">Italy</option>
+              <option value="JE" label="Jersey">Jersey</option>
+              <option value="LV" label="Latvia">Latvia</option>
+              <option value="LI" label="Liechtenstein">Liechtenstein</option>
+              <option value="LT" label="Lithuania">Lithuania</option>
+              <option value="LU" label="Luxembourg">Luxembourg</option>
+              <option value="MK" label="Macedonia">Macedonia</option>
+              <option value="MT" label="Malta">Malta</option>
+              <option value="FX" label="Metropolitan France">
+                Metropolitan France
+              </option>
+              <option value="MD" label="Moldova">Moldova</option>
+              <option value="MC" label="Monaco">Monaco</option>
+              <option value="ME" label="Montenegro">Montenegro</option>
+              <option value="NL" label="Netherlands">Netherlands</option>
+              <option value="NO" label="Norway">Norway</option>
+              <option value="PL" label="Poland">Poland</option>
+              <option value="PT" label="Portugal">Portugal</option>
+              <option value="RO" label="Romania">Romania</option>
+              <option value="RU" label="Russia">Russia</option>
+              <option value="SM" label="San Marino">San Marino</option>
+              <option value="RS" label="Serbia">Serbia</option>
+              <option value="CS" label="Serbia and Montenegro">
+                Serbia and Montenegro
+              </option>
+              <option value="SK" label="Slovakia">Slovakia</option>
+              <option value="SI" label="Slovenia">Slovenia</option>
+              <option value="ES" label="Spain">Spain</option>
+              <option value="SJ" label="Svalbard and Jan Mayen">
+                Svalbard and Jan Mayen
+              </option>
+              <option value="SE" label="Sweden">Sweden</option>
+              <option value="CH" label="Switzerland">Switzerland</option>
+              <option value="UA" label="Ukraine">Ukraine</option>
+              <option value="SU" label="Union of Soviet Socialist Republics">
+                Union of Soviet Socialist Republics
+              </option>
+              <option value="GB" label="United Kingdom">United Kingdom</option>
+              <option value="VA" label="Vatican City">Vatican City</option>
+              <option value="AX" label="Åland Islands">Åland Islands</option>
+            </optgroup>
+            <optgroup id="country-optgroup-Oceania" label="Oceania">
+              <option value="AS" label="American Samoa">American Samoa</option>
+              <option value="AQ" label="Antarctica">Antarctica</option>
+              <option value="AU" label="Australia">Australia</option>
+              <option value="BV" label="Bouvet Island">Bouvet Island</option>
+              <option value="IO" label="British Indian Ocean Territory">
+                British Indian Ocean Territory
+              </option>
+              <option value="CX" label="Christmas Island">
+                Christmas Island
+              </option>
+              <option value="CC" label="Cocos [Keeling] Islands">
+                Cocos [Keeling] Islands
+              </option>
+              <option value="CK" label="Cook Islands">Cook Islands</option>
+              <option value="FJ" label="Fiji">Fiji</option>
+              <option value="PF" label="French Polynesia">
+                French Polynesia
+              </option>
+              <option value="TF" label="French Southern Territories">
+                French Southern Territories
+              </option>
+              <option value="GU" label="Guam">Guam</option>
+              <option value="HM" label="Heard Island and McDonald Islands">
+                Heard Island and McDonald Islands
+              </option>
+              <option value="KI" label="Kiribati">Kiribati</option>
+              <option value="MH" label="Marshall Islands">
+                Marshall Islands
+              </option>
+              <option value="FM" label="Micronesia">Micronesia</option>
+              <option value="NR" label="Nauru">Nauru</option>
+              <option value="NC" label="New Caledonia">New Caledonia</option>
+              <option value="NZ" label="New Zealand">New Zealand</option>
+              <option value="NU" label="Niue">Niue</option>
+              <option value="NF" label="Norfolk Island">Norfolk Island</option>
+              <option value="MP" label="Northern Mariana Islands">
+                Northern Mariana Islands
+              </option>
+              <option value="PW" label="Palau">Palau</option>
+              <option value="PG" label="Papua New Guinea">
+                Papua New Guinea
+              </option>
+              <option value="PN" label="Pitcairn Islands">
+                Pitcairn Islands
+              </option>
+              <option value="WS" label="Samoa">Samoa</option>
+              <option value="SB" label="Solomon Islands">
+                Solomon Islands
+              </option>
+              <option
+                value="GS"
+                label="South Georgia and the South Sandwich Islands"
+              >
+                South Georgia and the South Sandwich Islands
+              </option>
+              <option value="TK" label="Tokelau">Tokelau</option>
+              <option value="TO" label="Tonga">Tonga</option>
+              <option value="TV" label="Tuvalu">Tuvalu</option>
+              <option value="UM" label="U.S. Minor Outlying Islands">
+                U.S. Minor Outlying Islands
+              </option>
+              <option value="VU" label="Vanuatu">Vanuatu</option>
+              <option value="WF" label="Wallis and Futuna">
+                Wallis and Futuna
+              </option>
+            </optgroup>
+          </select>
+        </section>
+        <section>
+          <label for="city">City<sup>*</sup></label>
+          <input
+            id="city"
+            name="city"
+            type="text"
+            autocomplete="off"
+            placeholder="Enter your city"
+            required
+          />
+        </section>
+        <section>
+          <label for="contact">Contact Number<sup>*</sup></label>
+          <input
+            id="phone"
+            name="phone"
+            type="text"
+            autocomplete="off"
+            placeholder="00000 00000"
+            required
+          />
+        </section>
+        <section>
+          <label for="gender">Gender<sup>*</sup></label>
+          <select name="gender" class="gender-select" id="gender">
+            <option
+              value="0"
+              label="Choose your gender ... "
+              selected="selected"
+            >
+              Choose your gender ...
+            </option>
+            <option value="M" label="Male">Male</option>
+            <option value="F" label="Female">Female</option>
+            <option value="O" label="Other">Other</option>
+          </select>
+        </section>
+        <section>
+          <label for="goal">What's your Goal/Concern?(Optional)</label>
+          <input
+            id="goal"
+            name="concern"
+            type="text"
+            autocomplete="off"
+            placeholder="Enter your goal"
+          />
+        </section>
+        <section>
+          <label for="time">Preferred Time for Call<sup>*</sup></label>
+          <input
+            id="time"
+            name="time"
+            type="time"
+            autocomplete="off"
+            required
+          />
+        </section>
+      </main>
+      <button type="submit" class="btn">Book your consultation</button>
+    </form>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>
+
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  const form = $("#addform");
+
+  form.on("submit", submitHandler);
+
+  function submitHandler(e) {
+    e.preventDefault();
+
+    const data = getFormData(form);
+    //  console.log(data);
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/website/addcontact",
+      data: JSON.stringify(data),
+    })
+
+      .done((res) => {
+        console.log("Faq add successfully");
+        window.location.reload();
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+
+<script>
+  $(".FoodID").click(function () {
+    var data = { id: $(this).attr("data-id") };
+
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/website/food",
+      data: JSON.stringify(data),
+    }).done((res) => {
+      if (res.status == true) {
+        alert("Data Not Found");
+      } else {
+        const html = "";
+
+        let data = res;
+        console.log(data);
+
+        data.forEach((e) => {
+          console.log(e);
+          html += `
+            <img src="/uploads/food/${e.image}" alt="image1" />    
+          `;
+        });
+        $("#search-list").html(html);
+      }
+    });
+  });
+</script>

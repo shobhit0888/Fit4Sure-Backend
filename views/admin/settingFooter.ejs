@@ -1,0 +1,236 @@
+<%- include('partials/header.ejs') %>
+
+<div class="main-content">
+  <section class="section">
+    <div class="section-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div
+              class="card-header"
+              style="height: 70px; background-color: #6fd943"
+            >
+              <div class="col-12">
+                <h4 class="float-left">Footer</h4>
+                <div class="head-right-btn">
+                </div>
+              </div>
+            </div>
+
+            <div class="body mb-5">
+              <div class="modal-body mb-5">
+                <form
+                  id="addnew"
+                  class="mx-5 form-group font-weight-bold showcursor: true"
+                >
+                  <div class="mb-3">
+                    <label for="playstore_link" class="form-label"
+                      >Playstore Link</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="playstore_link"
+                      name="playstore_link"
+                      placeholder="Enter Playstore Link"
+                      value="<%= playstore_link %>"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="appstore_link" class="form-label"
+                      >Appstore Link</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="appstore_link"
+                      name="appstore_link"
+                      placeholder="Enter Appstore Link"
+                      value="<%= appstore_link %>"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="youtube_link" class="form-label"
+                      >Youtube Link</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="youtube_link"
+                      name="youtube_link"
+                      placeholder="Enter Youtube Link"
+                      value="<%= youtube_link %>"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="instagram_link" class="form-label"
+                      >Instagram Link</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="instagram_link"
+                      name="instagram_link"
+                      placeholder="Enter Instagram Link"
+                      value="<%= instagram_link %>"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="twitter_link" class="form-label"
+                      >Twitter Link</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="twitter_link"
+                      name="twitter_link"
+                      placeholder="Enter Twitter Link"
+                      value="<%= twitter_link %>"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="facebook_link" class="form-label"
+                      >Facebook Link</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="facebook_link"
+                      name="facebook_link"
+                      placeholder="Enter Facebook Link"
+                      value="<%= facebook_link %>"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea
+                      class="form-control"
+                      id="description"
+                      name="description"
+                      rows="3"
+                      placeholder="Enter Description">
+                      <%= description %>
+                    </textarea>
+                  </div>
+    
+                  <button
+                    type="submit"
+                    class="btn mt-3 mb-3 pull-right"
+                    style="background-color: #6fd943; color: #fff"
+                  >
+                    Add
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="modal" id="myModal">
+    <!-- modal  -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add New</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        
+      </div>
+    </div>
+    <!-- modal  -->
+  </div>
+</div>
+
+<%- include('partials/footer.ejs') %>
+
+<script>
+  function getFormData($form) {
+    var unindexed_array = $form.serializeArray();
+    var indexed_array = {};
+
+    $.map(unindexed_array, function (n, i) {
+      indexed_array[n["name"]] = n["value"];
+    });
+
+    return indexed_array;
+  }
+
+  const form = $("#addnew");
+
+  form.on("submit", submitHandler);
+
+  function submitHandler(e) {
+    e.preventDefault();
+
+    // PREPARE FORM DATA
+    let formData = $("form");
+    let data = {
+      facebook_link: $("#facebook_link").val(),
+      twitter_link: $("#twitter_link").val(),
+      instagram_link: $("#instagram_link").val(),
+      playstore_link: $("#playstore_link").val(),
+      appstore_link: $("#appstore_link").val(),
+      youtube_link: $("#youtube_link").val(),
+      description: $("#description").val(),
+    };
+
+    // DO POST
+    $.ajax({
+      type: "POST",
+      contentType: "application/json",
+      url: "/admin/setting_footer/add",
+      data: JSON.stringify(data),
+    })
+
+      .done((res) => {
+        if (res.error == true) {
+          renderToast({ message: res.message, icon: "error" });
+        } else {
+          renderToast({ message: res.message, icon: "success" });
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        }
+      })
+      .fail(function (xhr, status, error) {
+        console.log(xhr.responseText);
+      });
+  }
+</script>
+
+<script>
+  function deletesettingFooter(id) {
+    if (confirm("Do you really want to delete this Footer?")) {
+      // DO POST
+      $.ajax({
+        type: "POST",
+        contentType: "application/json",
+        url: "/admin/setting_footer/delete",
+        data: JSON.stringify({
+          id: id,
+        }),
+      })
+        .done((res) => {
+          if (res.error == true) {
+            renderToast({ message: res.message, icon: "error" });
+          } else {
+            renderToast({ message: res.message, icon: "success" });
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          console.log(xhr.responseText);
+        });
+    }
+  }
+</script>
