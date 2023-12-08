@@ -525,17 +525,17 @@ class AuthController {
     // }
   };
   static get_user_profile = async (req, res) => {
-    // let msg = "Something went wrong please try again later";
-    // try {
-    //   var token = req.body.token;
-    //   const payload = jwt.decode(token, process.env.TOKEN_SECRET);
-    //   const user = await User.findById(payload._id);
-    //   if (!user) return res.status(401).send("User not found");
-    //   res.send(user);
-    // } catch (error) {
-    //   console.log(error);
-    //   return res.status(401).send(msg);
-    // }
+    let msg = "Something went wrong please try again later";
+    try {
+      var token = req.body.token;
+      const payload = jwt.decode(token, process.env.TOKEN_SECRET);
+      const user = await User.findById(payload._id);
+      if (!user) return res.status(401).send("User not found");
+      res.send(user);
+    } catch (error) {
+      console.log(error);
+      return res.status(401).send(msg);
+    }
   };
   static coupon_verify = async (req, res) => {
     // let msg = "Something went wrong please try again later";

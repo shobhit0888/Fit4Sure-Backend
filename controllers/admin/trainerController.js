@@ -122,18 +122,20 @@ class TrainerController {
     try {
       const trainer = await Trainer.find();
       const admin = await Adminauth.find({});
-      const TrainersWithImageURLs = await Promise.all(
-        trainer.map(async (trainer) => {
-          const file = storage.bucket().file(trainer.image);
-          const [signedUrl] = await file.getSignedUrl({
-            action: "read",
-            expires: "03-01-2500",
-          });
-          return { ...trainer.toObject(), image: signedUrl };
-        })
-      );
+      // const TrainersWithImageURLs = await Promise.all(
+      //   trainer.map(async (trainer) => {
+      //     const file = storage.bucket().file(trainer.image);
+      //     console.log(file);
+      //     const [signedUrl] = await file.getSignedUrl({
+      //       action: "read",
+      //       expires: "03-01-2500",
+      //     });
+      //     return { ...trainer.toObject(), image: signedUrl };
+      //   })
+      // );
+
       return res.render("admin/trainer-list", {
-        trainer: TrainersWithImageURLs,
+        trainer: trainer,
         admin,
       });
     } catch (error) {

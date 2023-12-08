@@ -3,6 +3,7 @@ const Adminauth = require("../../models/Adminauth");
 const mongoose = require('mongoose')
 require("dotenv");
 const firebaseApp = require("../../firebase");
+const { users } = require("../app/apiController");
 
 const storage = firebaseApp.storage();
 
@@ -13,18 +14,18 @@ class usersController {
         created_at: -1,
       });
       const admin = await Adminauth.find({});
-      const usersWithImageURLs = await Promise.all(
-        recordData.map(async (user) => {
-          const file = storage.bucket().file(user.image);
-          const [signedUrl] = await file.getSignedUrl({
-            action: 'read',
-            expires: '03-01-2500',
-          });
-          return { ...user.toObject(), image: signedUrl };
-        })
-      );
+      // const usersWithImageURLs = await Promise.all(
+      //   recordData.map(async (user) => {
+      //     const file = storage.bucket().file(user.image);
+      //     const [signedUrl] = await file.getSignedUrl({
+      //       action: 'read',
+      //       expires: '03-01-2500',
+      //     });
+      //     return { ...user.toObject(), image: signedUrl };
+      //   })
+      // );
       return res.render("admin/user-list", {
-        recordData: usersWithImageURLs,
+        recordData: recordData,
         admin,
       });
     } catch (error) {
